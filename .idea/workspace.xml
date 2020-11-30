@@ -16,13 +16,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4076398f-7eac-46e9-9f1b-ed008af5e60b" name="Default Changelist" comment="fixed admin dashboard in /admin not working by reinstalling python:&#10;pip install -r requirements.txt --ignore-installed --force-reinstall --upgrade --no-cache-dir">
-      <change afterPath="$PROJECT_DIR$/ten_yad/homepage/migrations/0027_auto_20201130_1534.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ten_yad/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/ten_yad/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ten_yad/homepage/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/ten_yad/homepage/filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ten_yad/homepage/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ten_yad/homepage/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ten_yad/homepage/templates/post/post.html" beforeDir="false" afterPath="$PROJECT_DIR$/ten_yad/homepage/templates/post/post.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ten_yad/homepage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ten_yad/homepage/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +119,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606738694725</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fixed admin dashboard in /admin not working by reinstalling python:&#10;pip install -r requirements.txt --ignore-installed --force-reinstall --upgrade --no-cache-dir">
+      <created>1606754538847</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1606754538847</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -180,10 +181,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606658740816" />
-    <state x="382" y="110" key="Vcs.Push.Dialog.v2" timestamp="1606754512608">
+    <state x="382" y="110" key="Vcs.Push.Dialog.v2" timestamp="1606754600076">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="382" y="110" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606754512608" />
+    <state x="382" y="110" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1606754600076" />
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606658579958">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

@@ -22,7 +22,7 @@ app_name = 'homepage'
 
 urlpatterns = [
     url('admin/', admin.site.urls),
-    # url(r'login/', login),
     path('register/', include('register.urls')),
-    url(r'^homepage/', include('homepage.urls')),
+    url('', include('homepage.urls')),
+    path('', include(f"django.contrib.auth.urls"))
 ]

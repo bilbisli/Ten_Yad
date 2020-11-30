@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
     <h2>title: {{post.title}}</h2>
-    <p>author: {{post.user}}</p>
+    <p>author: <a href="/user/profile?id={{post.user.id}}" >{{post.user.profile}}</a></p>
     <p>updated last: {{post.time_updated_last}}</p>
     <p>content: {{post.content}}</p>
 {% endblock %}

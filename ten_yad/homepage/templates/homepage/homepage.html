@@ -4,11 +4,19 @@
 {% endblock %}
 {% block content %}
     <h2>Homepage</h2>
-    <h3>recent posts</h3>
-    <ul>
-        {% for post in recent_posts %}
-            <li><a href="http://127.0.0.1:8000/homepage/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:
-                {{post.time_updated_last}} by <a href="http://127.0.0.1:8000/homepage/user/profile?id={{post.user.id}}" >{{post.user}}</a> </li>
-        {% endfor %}
-    </ul>
+    <div class="search_posts">
+        <form method="get">
+            {{post_filter.form}}
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="recent_posts">
+        <h3>recent posts</h3>
+        <ul>
+            {% for post in show_posts %}
+                <li><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:
+                    {{post.time_updated_last}} by <a href="/user/profile?id={{post.user.id}}" >{{post.user.profile}}</a> </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

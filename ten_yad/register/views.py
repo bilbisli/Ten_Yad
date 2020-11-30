@@ -1,9 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-# Create your views here.
+from .forms import RegisterForm
+from django.contrib.auth.decorators import user_passes_test
 
 
+@user_passes_test(lambda user: user.is_authenticated)
 def register(response):
-    form = UserCreationForm()
+    if response.method == "POST":
+        form = RegisterForm(response.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("/homepage")
+    else:
+        form = RegisterForm()
     return render(response, 'register/register.html', {'form': form})

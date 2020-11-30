@@ -58,7 +58,7 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.name}'
     name = models.CharField(max_length=MEDIUM_STRING)
-    time_signed = models.DateTimeField('time updated', default=now())
+    time_signed = models.DateTimeField('time updated', default=now)
 
 
 class PostType(models.Model):
@@ -87,10 +87,10 @@ class Post(models.Model):
     category = models.ForeignKey(Category, null=True, related_name='posts', on_delete=models.SET_NULL)
     post_type = models.ForeignKey(PostType, null=True, related_name='posts', on_delete=models.SET_DEFAULT, default=1)
     post_status = models.ForeignKey(PostStatus, null=True, related_name='posts', on_delete=models.SET_DEFAULT, default=1)
-    time_created = models.DateTimeField('time posted', default=now())
-    time_updated_last = models.DateTimeField('last updated', default=now())
+    time_created = models.DateTimeField('time posted', default=now)
+    time_updated_last = models.DateTimeField('last updated', default=now)
     location = models.CharField(max_length=MEDIUM_STRING)
-    start_time = models.DateTimeField('timeframe relevancy start', default=now())
-    end_time = models.DateTimeField('timeframe relevancy end', default=now())
+    start_time = models.DateTimeField('timeframe relevancy start', default=now)
+    end_time = models.DateTimeField('timeframe relevancy end', default=now)
     equipment = models.TextField(max_length=LARGE_STRING)
     content = models.TextField(max_length=MAX_STRING)

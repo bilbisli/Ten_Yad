@@ -1,10 +1,23 @@
 {% extends 'base/base.html' %}
 {% block title %}
-    post id: {{post.id}}
+    Ten Yad - post id: {{post.id}}
 {% endblock %}
 {% block content %}
     <h2>title: {{post.title}}</h2>
     <p>author: <a href="/user/profile?id={{post.user.id}}" >{{post.user.profile}}</a></p>
-    <p>updated last: {{post.time_updated_last}}</p>
+    {% if user.profile.show_email %}
+        <p>category: {{post.category}}</p>
+    {% endif %}
+    {% if user.profile.show_email %}
+        <p>post type: {{post.post_type}}</p>
+    {% endif %}
+    {% if user.profile.show_email %}
+        <p>post location: {{post.location}}</p>
+    {% endif %}
     <p>content: {{post.content}}</p>
+    {% if user.profile.show_email %}
+        <p>equipment needed: {{post.equipment}}</p>
+    {% endif %}
+    <p>updated last: {{post.time_updated_last}}</p>
+    <p>post status: {{post.post_status}}</p>
 {% endblock %}

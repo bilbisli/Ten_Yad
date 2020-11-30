@@ -76,12 +76,6 @@ class PostStatus(models.Model):
 
 
 class Post(models.Model):
-    def __str__(self):
-        category_print = ''
-        if self.category:
-            category_print += f', {self.category}'
-        return f'title: {self.title}, author: {self.user.get_full_name()}{category_print}'
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=MEDIUM_STRING)
     category = models.ForeignKey(Category, null=True, related_name='posts', on_delete=models.SET_NULL)
@@ -90,7 +84,13 @@ class Post(models.Model):
     time_created = models.DateTimeField('time posted', default=now)
     time_updated_last = models.DateTimeField('last updated', default=now)
     location = models.CharField(max_length=MEDIUM_STRING)
-    start_time = models.DateTimeField('timeframe relevancy start', default=now)
-    end_time = models.DateTimeField('timeframe relevancy end', default=now)
+    start_time = models.DateTimeField('relevant from', default=now)
+    end_time = models.DateTimeField('relevant until', default=now)
     equipment = models.TextField(max_length=LARGE_STRING)
     content = models.TextField(max_length=MAX_STRING)
+
+    def __str__(self):
+        category_print = ''
+        if self.category:
+            category_print += f', {self.category}'
+        return f'title: {self.title}, author: {self.user.profile}, category: {category_print}'

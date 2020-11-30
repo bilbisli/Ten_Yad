@@ -9,7 +9,7 @@ from .filters import PostSearch
 @login_required(login_url='/login/')
 def homepage(request):
     posts = Post.objects.all()
-    show_posts = posts.order_by('-id')[:100]
+    # show_posts = posts.order_by('-id')[:100]
     post_filter = PostSearch(request.GET, queryset=posts)
     show_posts = post_filter.qs
     context = {'page_title': 'homepage', 'show_posts': show_posts, 'post_filter': post_filter}

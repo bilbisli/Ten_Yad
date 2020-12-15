@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - New Assist Post
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST">
+        {% csrf_token %}
+         <div class="col-md-6">
+        {{ form.as_p }}
+        </div>
+
+<!--            <label for="inputEmail4" class="form-label">Email</label>-->
+<!--            <input type="user" class="form-control" id="{{ user }}">-->
+
+            <button type="submit" class="btn btn-success" name="save">Post</button>
+
+    </form>
+
+
+{% endblock %}

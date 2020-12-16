@@ -82,9 +82,9 @@ def new_assist_post(request):
         assistance_form = AssistOfferForm(request.POST or None)
         if assistance_form.is_valid():
             assistance_form.instance.user = request.user
-            assistance_form.save()
+            form = assistance_form.save()
             # messages.success(request, f'New Post created!')
-            return redirect("/")
+            return redirect('/')
 
         # assistance_form = AssistOfferForm(request.POST or None, instance=request.user)
         # if assistance_form.is_valid():

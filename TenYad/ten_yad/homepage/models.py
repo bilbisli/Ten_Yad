@@ -89,6 +89,7 @@ class Post(models.Model):
     end_time = models.DateTimeField('relevant until', default=now)
     equipment = models.TextField('equipment needed', max_length=LARGE_STRING, blank=True)
     content = models.TextField(max_length=MAX_STRING)
+    reactions = models.ManyToManyField(User, related_name='posts')
 
     def __str__(self):
         category_print = ''

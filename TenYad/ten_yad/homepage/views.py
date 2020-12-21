@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import User, Post
 from django.utils.timezone import now, datetime
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
 from .forms import AssistOfferForm
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 
 
@@ -19,13 +20,13 @@ def homepage(request):
 
 
 @login_required(login_url='/login/')
-def post(request):
+def post_page(request):
     post_id = request.GET['id']
     try:
-        post_ = Post.objects.get(id=post_id)
+        post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {post_id}")
-    return render(request, 'post/post.html', {'name': f'{post_.title}', 'post': post_})
+    return render(request, 'post/post.html', {'name': f'{post.title}', 'post': post})
 
 
 @login_required(login_url='/login/')
@@ -100,3 +101,9 @@ def new_assist_post(request):
     }
     return render(request, 'assist_offer/assist_offer.html', context)
 
+
+def ReactView(request):
+    post_id = request.GET['id']
+    post = get_object_or_404(Post, id=post_id)
+    post.reactions.add(request.user)
+    return HttpResponseRedirect(reverse('post_page', args=[str(post_id)]))

@@ -20,4 +20,13 @@
     {% endif %}
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
+
+    <br/><br/>
+    <hr>
+    <br/>
+    <form action="{% url 'react_to_post' %}"
+          method="POST"></form>
+    {% csrf_token%}
+    <button type="submit", name="post_id", value = "{{ post.id }}" , class="btn btn-success btn-sm">Ten Yad</button>
+
 {% endblock %}

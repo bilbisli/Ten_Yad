@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - Post History
+{% endblock %}
+{% block content %}
+    <div class="post_history_titel">
+        <h1>Post History</h1>
+    </div>
+    <div class="post_history_list: ">
+        <ul>
+        {% for post in user_posts %}
+                <li><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:{{post.time_updated_last}} </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

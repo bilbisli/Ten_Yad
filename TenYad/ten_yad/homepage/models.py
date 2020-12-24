@@ -77,7 +77,7 @@ class PostStatus(models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=MEDIUM_STRING)
     category = models.ForeignKey(Category, null=True, related_name='posts', on_delete=models.SET_NULL, blank=True)
     post_type = models.ForeignKey(PostType, null=True, related_name='posts', on_delete=models.SET_DEFAULT, default=1)
@@ -89,7 +89,8 @@ class Post(models.Model):
     end_time = models.DateTimeField('relevant until', default=now)
     equipment = models.TextField('equipment needed', max_length=LARGE_STRING, blank=True)
     content = models.TextField(max_length=MAX_STRING)
-    reactions = models.ManyToManyField(User, related_name='posts')
+    reactions = models.ManyToManyField(User, related_name='reactions')
+
 
     def __str__(self):
         category_print = ''

@@ -6,9 +6,9 @@ MIN_STRING = 15
 
 
 class RegisterForm(UserCreationForm):
-    first_name = forms.CharField(max_length=MIN_STRING)
-    last_name = forms.CharField(max_length=MIN_STRING)
-    email = forms.EmailField
+    first_name = forms.CharField(max_length=MIN_STRING, required=True)
+    last_name = forms.CharField(max_length=MIN_STRING, required=True)
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User

@@ -40,7 +40,7 @@ def user_profile(request):
 
     rating = calculate_rating(user)
 
-    if user.profile.birth_date.year:
+    if user.profile.birth_date and user.profile.birth_date.year:
         age = datetime.today().year - user.profile.birth_date.year
     else:
         age = None

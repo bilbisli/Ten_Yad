@@ -27,7 +27,7 @@ class Gender(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     gender = models.ForeignKey(Gender, null=True, related_name='users', on_delete=models.SET_NULL, blank=True)
-    birth_date = models.DateTimeField('birth date', blank=True)
+    birth_date = models.DateTimeField('birth date', null=True, blank=True)
     show_email = models.BooleanField(default=False)
     phone = models.CharField(max_length=MIN_STRING, blank=True)
     show_phone = models.BooleanField(default=False)

@@ -1,7 +1,6 @@
 import unittest
 from .models import *
 
-
 class ModelsTestCase(unittest.TestCase):
     def setUp(self):
         user = User.objects.create_user('tester', 'tester@testing.com', 'testpassword')

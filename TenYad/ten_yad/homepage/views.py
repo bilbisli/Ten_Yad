@@ -31,6 +31,7 @@ def post_page(request):
 
 @login_required(login_url='/login/')
 def user_profile(request):
+    MAX_POINT = 200
     user_id = request.GET['id']
     try:
         user = User.objects.get(id=user_id)
@@ -47,10 +48,10 @@ def user_profile(request):
         'name': f'{user.username}',
         'user': user,
         'age': age,
-        'rating': rating
+        'rating': rating,
+        'MAX_POINT': MAX_POINT
     }
     return render(request, 'profile/profile.html', context)
-
 
 # @login_required(login_url='/login/')
 def score_board(request):

@@ -8,5 +8,7 @@ urlpatterns = [
     url(f'user/profile', user_profile, name='profile'),
     url(f'scoreboard', score_board, name='scoreboard'),
     url(f'TenYad', new_assist_post, name='TenYad'),
-    path('react/', ReactView, name="react_to_post")
+    path('react/', ReactView, name="react_to_post"),
+    url(f'posts/history', post_history, name='post_history'),
+
 ]

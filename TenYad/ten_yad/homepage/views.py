@@ -47,9 +47,14 @@ def user_profile(request):
     context = {
         'name': f'{user.username}',
         'user': user,
+        'user_posts': Post.objects.all().filter(user=user),
         'age': age,
         'rating': rating,
+<<<<<<< HEAD
         'MAX_POINT': MAX_POINT
+=======
+
+>>>>>>> origin/ofir_new
     }
     return render(request, 'profile/profile.html', context)
 
@@ -108,3 +113,13 @@ def ReactView(request):
     post = get_object_or_404(Post, id=post_id)
     post.reactions.add(request.user)
     return HttpResponseRedirect(reverse('post_page', args=[str(post_id)]))
+
+def post_history(request):
+    user = request.user
+    context = {
+        'name': f'{user.username}',
+        'user': user,
+        'user_posts': Post.objects.all().filter(user=user),
+    }
+    return render(request, 'profile/post_history.html', context)
+

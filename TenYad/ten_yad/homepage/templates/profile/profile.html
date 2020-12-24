@@ -3,22 +3,78 @@
     Ten Yad - {{user}}
 {% endblock %}
 {% block content %}
+    <div>
+        <a href="{% url 'profile_edit' %}">
+            <button type="button" class="btn btn-success">Edit Profile</button>
+        </a>
+    </div>
     <div class="profile_title">
-        <h1>{{name}}'s Profile</h1>
+        <h1>{{name}}'s Profile
+        {% if rating < 1 %}
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 1 <= rating and rating < 2 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 2 <= rating and rating < 3 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 3 <= rating and rating < 4 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 4 <= rating and rating < 5 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        {% elif rating >= 5 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        {% endif %}
+        </h1>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+        .checked {
+          color: orange;
+        }
+        </style>
         <h2 style="color:rgb(14, 101, 179);">Points: {{user.profile.points}}</h2>
-        <h2 style="color:rgb(207,181,59);">Rating: {{rating}}</h2>
+        <style>
+        input.largerCheckbox {
+            width: 10px;
+            height: 10px;
+        }
+    </style>
     </div>
     <div class="profile_details">
+        <h3>details:</h3>
+        <font size="+2">
         {% if age %}
             <p>Age: {{age}}</p>
         {% endif %}
-        {% if user.profile.show_email %}
+        {% if user.profile.show_email and user.email%}
             <p>Email: {{user.email}}</p>
         {% endif %}
-        {% if user.profile.show_phone %}
+        {% if user.profile.show_phone and user.profile.phone %}
             <p>Phone: {{user.profile.phone}}</p>
         {% endif %}
-        {% if user.profile.show_telegram %}
+        {% if user.profile.show_telegram and user.profile.telegram %}
             <p>Telegram: {{user.profile.telegram}}</p>
         {% endif %}
         {% if user.profile.other_contact %}
@@ -27,7 +83,16 @@
         {% if user.profile.description %}
             <p>About myself: {{user.profile.description}}</p>
         {% endif %}
+        </font>
+    </div>
+    <div>
+        {% if user.profile.points >= MAX_POINT %}
+        <h2 style="color:rgb(0, 0, 0);"> Earned Icon:</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+width="50" height="50"
+viewBox="0 0 172 172"
+style=" fill:#000000;"><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="" fill="none"></path><path d="" fill="none"></path><g><path d="M129,129h-86l-17.91667,-71.66667l35.83333,28.66667l25.08333,-46.58333l25.08333,46.58333l35.83333,-28.66667z" fill="#ffc107"></path><path d="M43,129h86v17.91667h-86zM86,25.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM150.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM21.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z" fill="#ff9800"></path></g></g></g></svg>
+        {% endif %}
     </div>
 
-<!--    points = models.IntegerField(default=0)-->
 {% endblock %}

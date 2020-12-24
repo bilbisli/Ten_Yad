@@ -4,10 +4,10 @@ from .models import User, Post
 from django.utils.timezone import now, datetime
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
-from .forms import AssistOfferForm
+from .forms import AssistOfferForm, EditProfile
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
-
+from django.contrib.auth.forms import UserChangeForm
 
 @login_required(login_url='/login/')
 def homepage(request):
@@ -31,7 +31,8 @@ def post_page(request):
 
 @login_required(login_url='/login/')
 def user_profile(request):
-    user_id = request.GET['id']
+    MAX_POINT = 200
+    user_id = request.user.pk
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
@@ -39,20 +40,36 @@ def user_profile(request):
 
     rating = calculate_rating(user)
 
-    if user.profile.birth_date.year:
+    if user.profile.birth_date and user.profile.birth_date.year:
         age = datetime.today().year - user.profile.birth_date.year
     else:
         age = None
     context = {
         'name': f'{user.username}',
         'user': user,
+        'user_posts': Post.objects.all().filter(user=user),
         'age': age,
-        'rating': rating
+        'rating': rating,
+        'MAX_POINT': MAX_POINT,
     }
     return render(request, 'profile/profile.html', context)
 
 
-# @login_required(login_url='/login/')
+def profile_edit(request):
+    args = {}
+    if request.method == 'POST':
+        form = EditProfile(request.POST, instance=request.user)
+        user = request.user
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('profile'))
+    else:
+        form = EditProfile()
+
+    args['form'] = form
+    return render(request, 'profile/editProfile.html', args)
+
+@login_required(login_url='/login/')
 def score_board(request):
     top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:5]
     top_scores = [(number + 1, user, calculate_rating(user)) for number, user in enumerate(top_scores)]
@@ -110,3 +127,12 @@ def ReactView(request, pk):
     # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
     return redirect(f'/posts/post?id={pk}')
+
+def post_history(request):
+    user = request.user
+    context = {
+        'name': f'{user.username}',
+        'user': user,
+        'user_posts': Post.objects.all().filter(user=user),
+    }
+    return render(request, 'profile/post_history.html', context)

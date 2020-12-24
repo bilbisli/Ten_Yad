@@ -24,9 +24,10 @@
     <br/><br/>
     <hr>
     <br/>
-    <form action="{% url 'react_to_post' %}"
-          method="POST"></form>
-    {% csrf_token%}
-    <button type="submit", name="post_id", value = "{{ post.id }}" , class="btn btn-success btn-sm">Ten Yad</button>
+    <form action="{% url 'react_to_post' post.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
+
+    </form>
 
 {% endblock %}

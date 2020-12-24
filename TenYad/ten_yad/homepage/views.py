@@ -102,8 +102,11 @@ def new_assist_post(request):
     return render(request, 'assist_offer/assist_offer.html', context)
 
 
-def ReactView(request):
-    post_id = request.GET['id']
-    post = get_object_or_404(Post, id=post_id)
+def ReactView(request, pk):
+    try:
+        post = Post.objects.get(id=pk)
+    except User.DoesNotExist:
+        raise Http404(f"Invalid user id: {pk}")
+    # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
-    return HttpResponseRedirect(reverse('post_page', args=[str(post_id)]))
+    return redirect(f'/posts/post?id={pk}')

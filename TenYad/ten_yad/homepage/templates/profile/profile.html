@@ -3,10 +3,58 @@
     Ten Yad - {{user}}
 {% endblock %}
 {% block content %}
+    <div>
+        <a href="{% url 'profile_edit' %}">
+            <button type="button" class="btn btn-success">Edit Profile</button>
+        </a>
+    </div>
     <div class="profile_title">
-        <h1>{{name}}'s Profile</h1>
+        <h1>{{name}}'s Profile
+        {% if rating < 1 %}
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 1 <= rating and rating < 2 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 2 <= rating and rating < 3 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 3 <= rating and rating < 4 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        <span class="fa fa-star"></span>
+        {% elif 4 <= rating and rating < 5 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star"></span>
+        {% elif rating >= 5 %}
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        <span class="fa fa-star checked"></span>
+        {% endif %}
+        </h1>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+        .checked {
+          color: orange;
+        }
+        </style>
         <h2 style="color:rgb(14, 101, 179);">Points: {{user.profile.points}}</h2>
-        <h2 style="color:rgb(207,181,59);">Rating: {{rating}}</h2>
         <style>
         input.largerCheckbox {
             width: 10px;
@@ -15,25 +63,18 @@
     </style>
     </div>
     <div class="profile_details">
+        <h3>details:</h3>
+        <font size="+2">
         {% if age %}
             <p>Age: {{age}}</p>
         {% endif %}
-        {% if user.profile.show_email != False %}
-            <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my email.</font></p>
-        {% endif %}
-        {% if user.profile.show_email %}
+        {% if user.profile.show_email and user.email%}
             <p>Email: {{user.email}}</p>
         {% endif %}
-        {% if user.profile.show_phone != False %}
-            <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my phone.</font></p>
-        {% endif %}
-        {% if user.profile.show_phone %}
+        {% if user.profile.show_phone and user.profile.phone %}
             <p>Phone: {{user.profile.phone}}</p>
         {% endif %}
-        {% if user.profile.show_telegram != False %}
-            <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my telegram.</font></p>
-        {% endif %}
-        {% if user.profile.show_telegram %}
+        {% if user.profile.show_telegram and user.profile.telegram %}
             <p>Telegram: {{user.profile.telegram}}</p>
         {% endif %}
         {% if user.profile.other_contact %}
@@ -42,18 +83,7 @@
         {% if user.profile.description %}
             <p>About myself: {{user.profile.description}}</p>
         {% endif %}
-        <div>
-            <h3>Priority for calling</h3>
-            {% if user.profile.show_email != False %}
-            <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my telegram.</font></p>
-            {% endif %}
-            {% if user.profile.show_phone != False %}
-            <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my telegram.</font></p>
-            {% endif %}
-            {% if user.profile.show_telegram != False %}
-            <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my telegram.</font></p>
-            {% endif %}
-        </div>
+        </font>
     </div>
     <div>
         {% if user.profile.points >= MAX_POINT %}

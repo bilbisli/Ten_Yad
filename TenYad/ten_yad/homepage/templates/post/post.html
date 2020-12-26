@@ -20,14 +20,49 @@
     {% endif %}
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
-
+    {% if user == post.user %}
+        <br/>
+        <form action="{% url 'delete_post' post.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-danger btn-sm">Delete Post</button>
+    {% endif %}
+    </form>
     <br/><br/>
     <hr>
     <br/>
-    <form action="{% url 'react_to_post' post.id %}" method="POST">
-        {% csrf_token %}
-        <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
 
-    </form>
+    {% if user in post.reactions.all %}
+        <form action="{% url 'cancel_react_to_post' post.id user.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Remove Yad</button>
+        </form>
+    {% elif user != post.user %}
+        <form action="{% url 'react_to_post' post.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
+        </form>
+    {% elif post.reactions.all %}
+        <ul>
+        {% for reacted_user in post.reactions.all %}
+
+            <p>Approved reactions:</p>
+            <ul style="list-style-type: square ; padding-bottom: 0;">
+                <li style="margin-left:1em"><a href="/user/profile?id={{reacted_user.id}}" >{{reacted_user.profile}}</a>
+                {% if reacted_user in post.approved_reactions.all %}
+                    <form action="{% url 'cancel_react_to_post' post.id reacted_user.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'accept_react_to_post' post.id reacted_user.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                {% endif %}
+                </li>
+            </ul>
+        {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock %}

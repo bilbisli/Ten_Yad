@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 MIN_STRING = 15
@@ -117,3 +118,8 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', args=(str(self.id)))
+
+
+
+
+

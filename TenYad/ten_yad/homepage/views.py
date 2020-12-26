@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
 from .forms import AssistOfferForm, EditProfile
 from django.urls import reverse
+
+from django.template import loader
+
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm
 
@@ -218,3 +221,17 @@ def post_history(request):
         'user_posts': Post.objects.all().filter(user=user),
     }
     return render(request, 'profile/post_history.html', context)
+
+
+def Messages(request):
+    user = request.user
+    context = {
+        'reactions': Post.reactions,
+        'rating_sum': user.profile.rating_sum,
+        'points': user.profile.points,
+    }
+    return render(request, 'messages/messages.html', context)
+
+
+
+

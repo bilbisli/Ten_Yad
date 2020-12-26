@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - Post History
+{% endblock %}
+{% block content %}
+    <div class="Messages_titel">
+        <h1>Messages</h1>
+    </div>
+    <div class="Messages_list: ">
+        <ul>
+         {% for post in user_posts %}
+            {% if post.reactions %}
+                <a>Posts reactions</a>
+                <li><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:{{post.time_updated_last}} </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if Profile.points %}
+            <a>You have new rating</a>
+            <h2 style="color:rgb(14, 101, 179);">Points: {{user.profile.points}}</h2>
+         {% endif %}
+        </ul>
+    </div>
+{% endblock %}

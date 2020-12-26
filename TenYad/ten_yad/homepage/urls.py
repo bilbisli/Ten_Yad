@@ -16,4 +16,6 @@ urlpatterns = [
     path('reactivate_post/<int:pk>', ReactivatePostView, name="reactivate_post"),
     url(f'posts/history', post_history, name='post_history'),
     url(f'profile_edit', profile_edit, name='profile_edit'),
+    url(f'Messages', Messages, name='Messages'),
     ]
+

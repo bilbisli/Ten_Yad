@@ -10,6 +10,9 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm
 
 
+POINT_FOR_ASSIST = 10
+
+
 @login_required(login_url='/login/')
 def homepage(request):
     posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE)
@@ -33,7 +36,7 @@ def post_page(request):
 @login_required(login_url='/login/')
 def user_profile(request):
     MAX_POINT = 200
-    user_id = request.user.pk
+    user_id = request.GET['id']
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
@@ -170,6 +173,8 @@ def CompleteAssistView(request, pk, user_assist):
         raise Http404(f"Invalid post id: {pk}")
     user = User.objects.get(id=user_assist)
     post.users_assist.add(user)
+    user.profile.points += POINT_FOR_ASSIST
+    user.profile.save()
     if user in post.reactions.all():
         post.reactions.remove(user)
     if user in post.approved_reactions.all():

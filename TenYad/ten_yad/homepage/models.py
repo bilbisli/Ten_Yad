@@ -90,6 +90,7 @@ class Post(models.Model):
     content = models.TextField(max_length=MAX_STRING)
     # reactions = models.ManyToManyField(User, null=True, related_name='reactions', blank=True)
     reactions = models.ManyToManyField(User, related_name='reactions', blank=True)
+    approved_reactions = models.ManyToManyField(User, related_name='approved_reactions', blank=True)
 
     def __str__(self):
         category_print = ''

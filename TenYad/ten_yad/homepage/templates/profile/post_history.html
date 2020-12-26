@@ -7,10 +7,22 @@
         <h1>Post History</h1>
     </div>
     <div class="post_history_list: ">
-        <ul>
+        <ol>
         {% for post in user_posts %}
-                <li><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:{{post.time_updated_last}} </li>
+            <li><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> updated last: {{post.time_updated_last}}
+                {% for approved_reaction in post.approved_reactions.all %}
+                    <p style="margin-left:1em">Approved reactions:</p>
+                    <ul style="list-style-type: square ; padding-bottom: 0;">
+                            <li style="margin-left:2em"> <a href="/user/profile?id={{approved_reaction.id}}" >
+                                {{approved_reaction.profile}}</a></li>
+                        <form action="{% url 'cancel_react_to_post' post.id approved_reaction.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
+                        </form>
+                    </ul>
+                {% endfor %}
+            </li>
         {% endfor %}
-        </ul>
+        </ol>
     </div>
 {% endblock %}

@@ -26,13 +26,13 @@ def post_page(request):
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {post_id}")
-    return render(request, 'post/post.html', {'name': f'{post.title}', 'post': post})
+    return render(request, 'post/post.html', {'name': f'{post.title}', 'post': post, 'user': request.user})
 
 
 @login_required(login_url='/login/')
 def user_profile(request):
     MAX_POINT = 200
-    user_id = request.user.pk
+    user_id = request.GET['id']
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
@@ -55,6 +55,7 @@ def user_profile(request):
     return render(request, 'profile/profile.html', context)
 
 
+@login_required(login_url='/login/')
 def profile_edit(request):
     args = {}
     if request.method == 'POST':
@@ -68,6 +69,7 @@ def profile_edit(request):
 
     args['form'] = form
     return render(request, 'profile/editProfile.html', args)
+
 
 @login_required(login_url='/login/')
 def score_board(request):
@@ -95,6 +97,7 @@ def calculate_rating(user):
         return 0
 
 
+@login_required(login_url='/login/')
 def new_assist_post(request):
     if request.method == 'POST':
         assistance_form = AssistOfferForm(request.POST or None)
@@ -119,15 +122,53 @@ def new_assist_post(request):
     return render(request, 'assist_offer/assist_offer.html', context)
 
 
+@login_required(login_url='/login/')
 def ReactView(request, pk):
     try:
         post = Post.objects.get(id=pk)
-    except User.DoesNotExist:
-        raise Http404(f"Invalid user id: {pk}")
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
     # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
     return redirect(f'/posts/post?id={pk}')
 
+
+@login_required(login_url='/login/')
+def CancelReactView(request, pk, user_reaction_remove):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    # post = Post.objects.get(id=post_id)
+    user = User.objects.get(id=user_reaction_remove)
+    if user in post.reactions.all():
+        post.reactions.remove(user)
+    if user in post.approved_reactions.all():
+        post.approved_reactions.remove(user)
+    return redirect(f'/posts/post?id={pk}')
+
+
+@login_required(login_url='/login/')
+def AcceptReactView(request, pk, approved_reaction):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    post.approved_reactions.add(User.objects.get(id=approved_reaction))
+    return redirect(f'/posts/post?id={pk}')
+
+
+@login_required(login_url='/login/')
+def DeletePostView(request, pk):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    post.delete()
+    return redirect(f'/posts/history')
+
+
+@login_required(login_url='/login/')
 def post_history(request):
     user = request.user
     context = {

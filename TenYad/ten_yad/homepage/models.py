@@ -24,6 +24,10 @@ MAX_STRING = 1023
 #     def __str__(self):
 #         return f'{self.gender}'
 
+class Message(models.Model):
+    notification = models.CharField('notification', max_length=LARGE_STRING, blank=True)
+    link = models.URLField("link", max_length=LARGE_STRING, blank=True)
+
 
 class Profile(models.Model):
     class Gender(models.TextChoices):
@@ -44,6 +48,8 @@ class Profile(models.Model):
     points = models.IntegerField(default=0)
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
+    notifications = models.ManyToManyField(Message, blank=True)
+    unread_notifications = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.user.get_username()}'

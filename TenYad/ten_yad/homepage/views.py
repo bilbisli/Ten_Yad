@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .models import User, Post
+from .models import User, Post, Message
 from django.utils.timezone import now, datetime
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
@@ -137,6 +137,14 @@ def ReactView(request, pk):
         raise Http404(f"Invalid post id: {pk}")
     # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
+    user_post = post.user
+    msg = Message()
+    msg.link = f"/posts/post?id={pk}"
+    msg.notification = f"New reaction to your post: {post.title}"
+    msg.save()
+    user_post.profile.notifications.add(msg)
+    user_post.profile.unread_notifications += 1
+    user_post.save()
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -230,11 +238,17 @@ def post_history(request):
 
 def Messages(request):
     user = request.user
+    notifications = user.profile.notifications.all()
+    notifications.reverse()
+    unread_notifications = notifications[:user.profile.unread_notifications]
+    read_notifications = notifications[user.profile.unread_notifications+1:]
     context = {
-        'reactions': Post.reactions,
-        'rating_sum': user.profile.rating_sum,
-        'points': user.profile.points,
+        'user': user,
+        'unread_notifications': unread_notifications,
+        'read_notifications': read_notifications,
     }
+    user.profile.unread_notifications = 0
+    user.profile.save()
     return render(request, 'messages/messages.html', context)
 
 

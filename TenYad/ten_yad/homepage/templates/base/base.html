@@ -49,8 +49,11 @@
                     <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
                   </ul>
                 </div>
-
-                <a class="nav-link" href="/Messages">Messages</a>
+                {% if user.profile.unread_notifications %}
+                <a class="nav-link" href="/Messages">Messages <txt style="font-size:14px; color:#FF0000; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                {% else %}
+                <a class="nav-link" href="/Messages">Messages <txt style="font-size:14px; color:#808080; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                {% endif %}
                 <a class="nav-link" href="/logout">Logout</a>
             </div>
           </div>

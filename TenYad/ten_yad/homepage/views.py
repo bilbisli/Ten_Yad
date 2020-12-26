@@ -185,6 +185,12 @@ def CompleteAssistView(request, pk, user_assist):
     user = User.objects.get(id=user_assist)
     post.users_assist.add(user)
     user.profile.points += POINT_FOR_ASSIST
+    msg = Message()
+    msg.link = f"/posts/post?id={pk}"
+    msg.notification = f"Your assist in : '{post.title}' was approved {POINT_FOR_ASSIST} added to your score congratulations!!"
+    msg.save()
+    user.profile.notifications.add(msg)
+    user.profile.unread_notifications += 1
     user.profile.save()
     if user in post.reactions.all():
         post.reactions.remove(user)

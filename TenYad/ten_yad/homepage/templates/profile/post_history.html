@@ -28,6 +28,10 @@
                             {% csrf_token %}
                             <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
                             </form>
+                            <form action="{% url 'complete_assist' post.id approved_reaction.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Complete assist</button>
+                            </form>
                         </ul>
                     {% endfor %}
                 {% endif %}

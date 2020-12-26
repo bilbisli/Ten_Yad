@@ -20,49 +20,78 @@
     {% endif %}
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
+
     {% if user == post.user %}
         <br/>
         <form action="{% url 'delete_post' post.id %}" method="POST">
                 {% csrf_token %}
                 <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-danger btn-sm">Delete Post</button>
+        </form>
+        {% if post.post_status != post.PostStatus.ARCHIVE %}
+            <form action="{% url 'close_post' post.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-secondary btn-sm">Close Post</button>
+            </form>
+        {% else %}
+            <form action="{% url 'reactivate_post' post.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-success btn-sm">Reactivate Post</button>
+            </form>
+        {% endif %}
     {% endif %}
-    </form>
-    <br/><br/>
-    <hr>
-    <br/>
+    {% if post.post_status != post.PostStatus.ARCHIVE %}
+        <br/><br/>
+        <hr>
+        <br/>
 
-    {% if user in post.reactions.all %}
-        <form action="{% url 'cancel_react_to_post' post.id user.pk %}" method="POST">
-            {% csrf_token %}
-            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Remove Yad</button>
-        </form>
-    {% elif user != post.user %}
-        <form action="{% url 'react_to_post' post.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
-        </form>
-    {% elif post.reactions.all %}
-        <ul>
-        {% for reacted_user in post.reactions.all %}
-
-            <p>Approved reactions:</p>
-            <ul style="list-style-type: square ; padding-bottom: 0;">
-                <li style="margin-left:1em"><a href="/user/profile?id={{reacted_user.id}}" >{{reacted_user.profile}}</a>
-                {% if reacted_user in post.approved_reactions.all %}
-                    <form action="{% url 'cancel_react_to_post' post.id reacted_user.pk %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
-                    </form>
-                {% else %}
-                    <form action="{% url 'accept_react_to_post' post.id reacted_user.pk %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Approve</button>
-                    </form>
-                {% endif %}
-                </li>
+        {% if user in post.reactions.all %}
+            <form action="{% url 'cancel_react_to_post' post.id user.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Remove Yad</button>
+            </form>
+        {% elif user != post.user %}
+            <form action="{% url 'react_to_post' post.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
+            </form>
+        {% elif post.reactions.all %}
+            <p>Reactions:</p>
+            <ul>
+            {% for reacted_user in post.reactions.all %}
+                <ul style="list-style-type: square ; padding-bottom: 0;">
+                    <li style="margin-left:1em"><a href="/user/profile?id={{reacted_user.id}}" >{{reacted_user.profile}}</a>
+                        {% if reacted_user in post.approved_reactions.all %}
+                            <form action="{% url 'cancel_react_to_post' post.id reacted_user.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
+                            </form>
+                            <form action="{% url 'complete_assist' post.id reacted_user.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Complete assist</button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'accept_react_to_post' post.id reacted_user.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                </ul>
+            {% endfor %}
             </ul>
-        {% endfor %}
-        </ul>
+        {% endif %}
     {% endif %}
+
+
+    {% if post.users_assist.all %}
+        <p>Users that assisted:</p>
+    {% endif %}
+    {% for user_assisted in post.users_assist.all %}
+        <ul style="list-style-type: square ; padding-bottom: 0;">
+                <li style="margin-left:2em"> <a href="/user/profile?id={{user_assisted.id}}" >
+                    {{user_assisted.profile}}</a></li>
+        </ul>
+    {% endfor %}
+
 
 {% endblock %}

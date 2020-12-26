@@ -9,9 +9,10 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm
 
+
 @login_required(login_url='/login/')
 def homepage(request):
-    posts = Post.objects.all()
+    posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE)
     # show_posts = posts.order_by('-id')[:100]
     post_filter = PostSearch(request.GET, queryset=posts)
     show_posts = post_filter.qs
@@ -32,7 +33,7 @@ def post_page(request):
 @login_required(login_url='/login/')
 def user_profile(request):
     MAX_POINT = 200
-    user_id = request.GET['id']
+    user_id = request.user.pk
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
@@ -145,6 +146,8 @@ def CancelReactView(request, pk, user_reaction_remove):
         post.reactions.remove(user)
     if user in post.approved_reactions.all():
         post.approved_reactions.remove(user)
+        if not post.approved_reactions.all():
+            post.post_status = Post.PostStatus.ACTIVE
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -155,6 +158,44 @@ def AcceptReactView(request, pk, approved_reaction):
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
     post.approved_reactions.add(User.objects.get(id=approved_reaction))
+    post.post_status = Post.PostStatus.TRANSACTION
+    return redirect(f'/posts/post?id={pk}')
+
+
+@login_required(login_url='/login/')
+def CompleteAssistView(request, pk, user_assist):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    user = User.objects.get(id=user_assist)
+    post.users_assist.add(user)
+    if user in post.reactions.all():
+        post.reactions.remove(user)
+    if user in post.approved_reactions.all():
+        post.approved_reactions.remove(user)
+    return redirect(f'/posts/post?id={pk}')
+
+
+@login_required(login_url='/login/')
+def ClosePostView(request, pk):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    post.post_status = Post.PostStatus.ARCHIVE
+    post.save()
+    return redirect('/')
+
+
+@login_required(login_url='/login/')
+def ReactivatePostView(request, pk):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    post.post_status = Post.PostStatus.ACTIVE
+    post.save()
     return redirect(f'/posts/post?id={pk}')
 
 

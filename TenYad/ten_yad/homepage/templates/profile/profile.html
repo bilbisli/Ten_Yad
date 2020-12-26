@@ -68,6 +68,9 @@
         {% if age %}
             <p>Age: {{age}}</p>
         {% endif %}
+        {% if age %}
+        <p>Gender: {{user.profile.gender}}</p>
+        {% endif %}
         {% if user.profile.show_email and user.email%}
             <p>Email: {{user.email}}</p>
         {% endif %}

@@ -17,16 +17,21 @@ XL_STRING = 511
 MAX_STRING = 1023
 
 
-class Gender(models.Model):
-    gender = models.CharField(max_length=MIN_STRING)
-
-    def __str__(self):
-        return f'{self.gender}'
+# class Gender(models.Model):
+#     gender = models.CharField(max_length=MIN_STRING)
+#
+#     def __str__(self):
+#         return f'{self.gender}'
 
 
 class Profile(models.Model):
+    class Gender(models.TextChoices):
+        FEMALE = "Female"
+        MALE = "Male"
+        OTHER = "Other"
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    gender = models.ForeignKey(Gender, null=True, related_name='users', on_delete=models.SET_NULL, blank=True)
+    gender = models.CharField('gender', max_length=MIN_STRING, null=True, blank=True, choices=Gender.choices)
     birth_date = models.DateTimeField('birth date', null=True, blank=True)
     show_email = models.BooleanField(default=False)
     phone = models.CharField(max_length=MIN_STRING, blank=True)
@@ -61,26 +66,37 @@ class Category(models.Model):
     time_signed = models.DateTimeField('time updated', default=now)
 
 
-class PostType(models.Model):
-    def __str__(self):
-        return f'{self.post_type}'
+# class PostType(models.Model):
+#     def __str__(self):
+#         return f'{self.post_type}'
+#
+#     post_type = models.CharField(max_length=MIN_STRING)
 
-    post_type = models.CharField(max_length=MIN_STRING)
-
-
-class PostStatus(models.Model):
-    def __str__(self):
-        return f'{self.post_status}'
-
-    post_status = models.CharField(max_length=MIN_STRING)
+#
+# class PostStatus(models.Model):
+#     def __str__(self):
+#         return f'{self.post_status}'
+#
+#     post_status = models.CharField(max_length=MIN_STRING)
 
 
 class Post(models.Model):
+    class PostType(models.TextChoices):
+        REQUEST_ASSIST = "Request Assistance"
+        OFFER_ASSIST = "Offer Assistance"
+        GROUP_ASSIST_REQUEST = "Group Assistance Request"
+        GROUP_ASSIST_OFFER = "Group Assistance Offer"
+
+    class PostStatus(models.TextChoices):
+        ACTIVE = "Active"
+        TRANSACTION = "Transaction"
+        ARCHIVE = "Archive"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
-    title = models.CharField(max_length=MEDIUM_STRING)
+    title = models.CharField('title', max_length=MEDIUM_STRING)
     category = models.ForeignKey(Category, null=True, related_name='posts', on_delete=models.SET_NULL, blank=True)
-    post_type = models.ForeignKey(PostType, null=True, related_name='posts', on_delete=models.SET_DEFAULT, default=1)
-    post_status = models.ForeignKey(PostStatus, null=True, related_name='posts', on_delete=models.SET_DEFAULT, default=1)
+    post_type = models.CharField('post type', max_length=MEDIUM_STRING, null=True, choices=PostType.choices, default=PostType.REQUEST_ASSIST)
+    post_status = models.CharField('post status', max_length=MIN_STRING, null=True, choices=PostStatus.choices, default=PostStatus.ACTIVE)
     time_created = models.DateTimeField('time posted', default=now)
     time_updated_last = models.DateTimeField('last updated', default=now)
     location = models.CharField(max_length=MEDIUM_STRING)
@@ -91,6 +107,7 @@ class Post(models.Model):
     # reactions = models.ManyToManyField(User, null=True, related_name='reactions', blank=True)
     reactions = models.ManyToManyField(User, related_name='reactions', blank=True)
     approved_reactions = models.ManyToManyField(User, related_name='approved_reactions', blank=True)
+    users_assist = models.ManyToManyField(User, related_name='users_assist', blank=True)
 
     def __str__(self):
         category_print = ''

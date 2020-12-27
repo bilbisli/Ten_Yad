@@ -33,7 +33,7 @@ def post_page(request):
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {post_id}")
-    return render(request, 'post/post.html', {'name': f'{post.title}', 'post': post, 'user': request.user})
+    return render(request, 'post/post.html', {'name': f'{post.title}', 'post': post, 'user': request.user, 'current_profile': request.user})
 
 
 @login_required(login_url='/login/')
@@ -223,9 +223,9 @@ def rate_user_view(request, pk, user_rate, amount_rate):
     user.profile.rating_count += 1
     user.profile.save()
     if request.user == post.user:
-        post.users_to_rate.remove(user)
+        post.users_to_rate.remove(request.user)
     else:
-        post.reacted_user_rate.remove(user)
+        post.reacted_user_rate.remove(request.user)
     return redirect(f'/posts/post?id={pk}')
 
 

@@ -79,6 +79,7 @@ class EditProfile(forms.ModelForm):
             user.profile.show_phone = self.cleaned_data['show_phone']
         if self.cleaned_data['other_contact']:
             user.profile.other_contact = self.cleaned_data['other_contact']
+        if self.cleaned_data['description']:
             user.profile.description = self.cleaned_data['description']
         if commit:
             user.profile.save()

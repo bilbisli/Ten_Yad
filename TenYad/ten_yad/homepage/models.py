@@ -120,6 +120,8 @@ class Post(models.Model):
     reactions = models.ManyToManyField(User, related_name='reactions', blank=True)
     approved_reactions = models.ManyToManyField(User, related_name='approved_reactions', blank=True)
     users_assist = models.ManyToManyField(User, related_name='users_assist', blank=True)
+    users_to_rate = models.ManyToManyField(User, related_name='users_to_rate', blank=True)
+    reacted_user_rate = models.ManyToManyField(User, related_name='reacted_user_rate', blank=True)
 
     def __str__(self):
         category_print = ''

@@ -57,7 +57,9 @@ def user_profile(request):
         'user_posts': Post.objects.all().filter(user=user),
         'age': age,
         'rating': rating,
+        'current_profile': request.user,
         'MAX_POINT': MAX_POINT,
+
     }
     return render(request, 'profile/profile.html', context)
 
@@ -70,7 +72,7 @@ def profile_edit(request):
         user = request.user
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('profile'))
+            return redirect(f"/user/profile?id={user.pk}")
     else:
         form = EditProfile()
 
@@ -207,7 +209,25 @@ def CompleteAssistView(request, pk, user_assist):
         post.reactions.remove(user)
     if user in post.approved_reactions.all():
         post.approved_reactions.remove(user)
+    post.users_to_rate.add(user)
     return redirect(f'/posts/post?id={pk}')
+
+@login_required(login_url='/login/')
+def rate_user_view(request, pk, user_rate, amount_rate):
+    try:
+        post = Post.objects.get(id=pk)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {pk}")
+    user = User.objects.get(id=user_rate)
+    user.profile.rating_sum += amount_rate
+    user.profile.rating_count += 1
+    user.profile.save()
+    if request.user == post.user:
+        post.users_to_rate.remove(user)
+    else:
+        post.reacted_user_rate.remove(user)
+    return redirect(f'/posts/post?id={pk}')
+
 
 
 @login_required(login_url='/login/')

@@ -138,11 +138,13 @@ def ReactView(request, pk):
     # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
     user_post = post.user
+
     msg = Message()
+    msg.user = user_post
     msg.link = f"/posts/post?id={pk}"
     msg.notification = f"New reaction to your post: {post.title}"
     msg.save()
-    user_post.profile.notifications.add(msg)
+
     user_post.profile.unread_notifications += 1
     user_post.save()
     return redirect(f'/posts/post?id={pk}')
@@ -171,8 +173,16 @@ def AcceptReactView(request, pk, approved_reaction):
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
-    post.approved_reactions.add(User.objects.get(id=approved_reaction))
+    user = User.objects.get(id=approved_reaction)
+    post.approved_reactions.add(user)
     post.post_status = Post.PostStatus.TRANSACTION
+
+    msg = Message(user=user)
+    msg.link = f"/posts/post?id={pk}"
+    msg.notification = f"Your assist in : '{post.title}' was accept by {user.profile} contact details now appear on the post, click to view. "
+    msg.save()
+    user.profile.unread_notifications += 1
+    user.profile.save()
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -185,11 +195,12 @@ def CompleteAssistView(request, pk, user_assist):
     user = User.objects.get(id=user_assist)
     post.users_assist.add(user)
     user.profile.points += POINT_FOR_ASSIST
-    msg = Message()
+
+    msg = Message(user=user)
     msg.link = f"/posts/post?id={pk}"
     msg.notification = f"Your assist in : '{post.title}' was approved {POINT_FOR_ASSIST} added to your score congratulations!!"
     msg.save()
-    user.profile.notifications.add(msg)
+
     user.profile.unread_notifications += 1
     user.profile.save()
     if user in post.reactions.all():
@@ -244,10 +255,11 @@ def post_history(request):
 
 def Messages(request):
     user = request.user
-    notifications = user.profile.notifications.all()
-    notifications.reverse()
-    unread_notifications = notifications[:user.profile.unread_notifications]
-    read_notifications = notifications[user.profile.unread_notifications+1:]
+    read_notifications = list(reversed(user.notifications.all()))
+    unread_notifications = []
+    if user.profile.unread_notifications:
+        unread_notifications = read_notifications[:user.profile.unread_notifications]
+        read_notifications = read_notifications[user.profile.unread_notifications:]
     context = {
         'user': user,
         'unread_notifications': unread_notifications,

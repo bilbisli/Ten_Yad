@@ -25,8 +25,14 @@ MAX_STRING = 1023
 #         return f'{self.gender}'
 
 class Message(models.Model):
-    notification = models.CharField('notification', max_length=LARGE_STRING, blank=True)
-    link = models.URLField("link", max_length=LARGE_STRING, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', null=True)
+    notification = models.CharField('notification', max_length=LARGE_STRING, blank=True, default='')
+    link = models.URLField("link", max_length=LARGE_STRING, blank=True, default='')
+    time = models.DateTimeField('alert_time', default=now)
+
+    def __str__(self):
+        return f'{self.notification}, {self.user.profile}, time: {self.time}'
+
 
 
 class Profile(models.Model):
@@ -48,7 +54,6 @@ class Profile(models.Model):
     points = models.IntegerField(default=0)
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
-    notifications = models.ManyToManyField(Message, blank=True)
     unread_notifications = models.IntegerField(default=0)
 
     def __str__(self):

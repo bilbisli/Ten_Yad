@@ -21,6 +21,24 @@
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
 
+
+    {% for approved_reaction in post.approved_reactions.all %}
+       {% if approved_reaction == user %}
+            {% if post.user.profile.email %}
+                <p>Email: {{post.user.profile.email}}</p>
+            {% endif %}
+            {% if post.user.profile.phone %}
+                <p>Phone: {{post.user.profile.phone}}</p>
+            {% endif %}
+            {% if post.user.profile.telegram %}
+                <p>Telegram: {{post.user.profile.telegram}}</p>
+            {% endif %}
+            {% if post.user.profile.other_contact %}
+                <p>Telegram: {{post.user.profile.other_contact}}</p>
+            {% endif %}
+       {% endif %}
+    {% endfor %}
+
     {% if user == post.user %}
         <br/>
         <form action="{% url 'delete_post' post.id %}" method="POST">

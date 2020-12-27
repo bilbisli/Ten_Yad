@@ -59,6 +59,23 @@
     {% endif %}
     {% if post.post_status != post.PostStatus.ARCHIVE %}
         <br/><br/>
+            <div class="user_rating">
+                <h3> Please rate {{post.user.profile}}:
+                    <form action="{% url 'rate_user' post.id post.user.pk 1 %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit", name="rating", value = "{{ post.pk }}" , class="btn btn-outline-secondary btn-sm"><span class="fa fa-star"></span></button>
+                    </form>
+
+                </h3>
+
+
+
+
+
+
+
+
+
         <hr>
         <br/>
 

@@ -4,7 +4,6 @@
 {% endblock %}
 {% block content %}
 
-
     <h2>title: {{post.title}}</h2>
     <p>author: <a href="/user/profile?id={{post.user.id}}" >{{post.user.profile}}</a></p>
     {% if post.category %}
@@ -22,7 +21,6 @@
     {% endif %}
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
-
 
     {% for approved_reaction in post.approved_reactions.all %}
        {% if approved_reaction == user %}
@@ -44,21 +42,22 @@
     {% if user == post.user %}
         <br/>
         <form action="{% url 'delete_post' post.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-danger btn-sm">Delete Post</button>
+            {% csrf_token %}
+            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-danger btn-sm">Delete Post</button>
         </form>
         {% if post.post_status != post.PostStatus.ARCHIVE %}
             <form action="{% url 'close_post' post.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-secondary btn-sm">Close Post</button>
+                {% csrf_token %}
+                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-secondary btn-sm">Close Post</button>
             </form>
         {% else %}
             <form action="{% url 'reactivate_post' post.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-success btn-sm">Reactivate Post</button>
+                {% csrf_token %}
+                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-outline-success btn-sm">Reactivate Post</button>
             </form>
         {% endif %}
     {% endif %}
+
     {% if post.post_status != post.PostStatus.ARCHIVE %}
         <br/><br/>
         {% if current_profile in post.reacted_user_rate.all %}
@@ -94,33 +93,19 @@
             </div>
         {% endif %}
 
-
-
-
-                      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                    <style>
-                    .checked {
-                      color: orange;
-                    }
-                    </style>
-                    <h2 style="color:rgb(14, 101, 179);">Points: {{user.profile.points}}</h2>
-                    <style>
-                    input.largerCheckbox {
-                        width: 10px;
-                        height: 10px;
-                    }
-                    </style>
-
-                </h3>
-
-
-
-
-
-
-
-
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            .checked {
+              color: orange;
+            }
+        </style>
+        <h2 style="color:rgb(14, 101, 179);">Points: {{user.profile.points}}</h2>
+        <style>
+            input.largerCheckbox {
+                width: 10px;
+                height: 10px;
+            }
+        </style>
         <hr>
         <br/>
 
@@ -162,16 +147,14 @@
         {% endif %}
     {% endif %}
 
-
     {% if post.users_assist.all %}
         <p>Users that assisted:</p>
     {% endif %}
     {% for user_assisted in post.users_assist.all %}
         <ul style="list-style-type: square ; padding-bottom: 0;">
-                <li style="margin-left:2em"> <a href="/user/profile?id={{user_assisted.id}}" >
-                    {{user_assisted.profile}}</a></li>
+            <li style="margin-left:2em"> <a href="/user/profile?id={{user_assisted.id}}" >
+                {{user_assisted.profile}}</a></li>
         </ul>
     {% endfor %}
-
 
 {% endblock %}

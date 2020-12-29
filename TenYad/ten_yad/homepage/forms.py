@@ -22,9 +22,9 @@ class EditProfile(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
+            'show_email',
             'gender',
             'birth_date',
-            'show_email',
             'phone',
             'show_phone',
             'telegram',

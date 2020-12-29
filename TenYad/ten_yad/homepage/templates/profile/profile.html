@@ -5,8 +5,11 @@
 {% block content %}
     {% if user == current_profile %}
         <div>
-            <a href="{% url 'profile_edit' %}">
-                <button type="button" class="btn btn-success">Edit Profile</button>
+            <a href="{% url 'profile_edit' %}" class="btn btn-success">
+                Edit Profile
+            </a>
+            <a href="{% url 'change_password' %}" class="btn btn-success">
+               Change Password
             </a>
         </div>
     {% endif %}

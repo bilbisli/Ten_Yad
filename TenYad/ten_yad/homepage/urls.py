@@ -18,5 +18,6 @@ urlpatterns = [
     url(f'posts/history', post_history, name='post_history'),
     url(f'profile_edit', profile_edit, name='profile_edit'),
     url(f'Messages', Messages, name='Messages'),
+    url(f'change_password', change_password, name='change_password'),
     ]
 

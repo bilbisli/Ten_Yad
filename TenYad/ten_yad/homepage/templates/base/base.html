@@ -24,7 +24,7 @@
 <!--                  <a class="nav-link active" aria-current="page" href="/">Home</a>-->
 <!--                </li>-->
                     <li class="nav-item">
-                      <a class="nav-link" href="/user/profile?id={{user.id}}">Profile</a>
+                      <a class="nav-link" href="/user/profile?id={{current_profile.pk}}">Profile</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link " href="{% url 'scoreboard' %}">Score Board</a>
@@ -47,6 +47,7 @@
                     <li><a class="dropdown-item" href="{% url 'post_history' %}">Post History</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
                   </ul>
                 </div>
                 {% if user.profile.unread_notifications %}

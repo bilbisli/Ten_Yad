@@ -4,14 +4,14 @@ from .models import User, Post, Message
 from django.utils.timezone import now, datetime
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
-from .forms import AssistOfferForm, EditProfile
+from .forms import AssistOfferForm, EditProfile, EditUser
 from django.urls import reverse
 
 from django.template import loader
 
 from django.views.generic import ListView, DetailView, CreateView
-from django.contrib.auth.forms import UserChangeForm
-
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 POINT_FOR_ASSIST = 10
 
@@ -22,7 +22,11 @@ def homepage(request):
     # show_posts = posts.order_by('-id')[:100]
     post_filter = PostSearch(request.GET, queryset=posts)
     show_posts = post_filter.qs
-    context = {'page_title': 'homepage', 'show_posts': show_posts, 'post_filter': post_filter}
+    context = {'page_title': 'homepage',
+               'show_posts': show_posts,
+               'post_filter': post_filter,
+               'current_profile': request.user,
+               }
     return render(request, 'homepage/homepage.html', context)
 
 
@@ -33,7 +37,13 @@ def post_page(request):
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {post_id}")
-    return render(request, 'post/post.html', {'name': f'{post.title}', 'post': post, 'user': request.user, 'current_profile': request.user})
+    context = {
+        'current_profile': request.user,
+        'name': f'{post.title}',
+        'post': post,
+        'user': request.user,
+    }
+    return render(request, 'post/post.html', context)
 
 
 @login_required(login_url='/login/')
@@ -66,21 +76,39 @@ def user_profile(request):
 
 @login_required(login_url='/login/')
 def profile_edit(request):
-    args = {}
     if request.method == 'POST':
         form = EditProfile(request.POST, instance=request.user)
+        formUser = EditUser(request.POST, instance=request.user)
         user = request.user
         if form.is_valid():
             form.save()
+            formUser.save()
             return redirect(f"/user/profile?id={user.pk}")
     else:
-        form = EditProfile()
-
-    args['form'] = form
-    return render(request, 'profile/editProfile.html', args)
+        form = EditProfile(instance=request.user.profile)
+        formUser = EditUser(instance=request.user)
+    context = {
+        'form': form,
+        'formUser': formUser,
+        'current_profile': request.user,
+    }
+    return render(request, 'profile/editProfile.html', context)
 
 
 @login_required(login_url='/login/')
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        user = request.user
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect(f"/user/profile?id={user.pk}")
+    else:
+        form = PasswordChangeForm(user=request.user.profile)
+    return render(request, 'profile/change_password.html', {'form': form, 'current_profile': request.user})
+
+
 def score_board(request):
     top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:5]
     top_scores = [(number + 1, user, calculate_rating(user)) for number, user in enumerate(top_scores)]
@@ -88,7 +116,8 @@ def score_board(request):
     score_board_link = 'scoreboard'
     context = {
         'top_scores': top_scores,
-        'score_board_link': score_board_link
+        'score_board_link': score_board_link,
+        'current_profile': request.user,
     }
     # return render(request, 'scoreboard.html')
     # posts = Post.objects.all()
@@ -126,7 +155,8 @@ def new_assist_post(request):
     else:
         assistance_form = AssistOfferForm()
     context = {
-        'form': assistance_form
+        'form': assistance_form,
+        'current_profile': request.user,
     }
     return render(request, 'assist_offer/assist_offer.html', context)
 
@@ -229,7 +259,6 @@ def rate_user_view(request, pk, user_rate, amount_rate):
     return redirect(f'/posts/post?id={pk}')
 
 
-
 @login_required(login_url='/login/')
 def ClosePostView(request, pk):
     try:
@@ -269,6 +298,7 @@ def post_history(request):
         'name': f'{user.username}',
         'user': user,
         'user_posts': Post.objects.all().filter(user=user),
+        'current_profile': request.user,
     }
     return render(request, 'profile/post_history.html', context)
 
@@ -284,6 +314,7 @@ def Messages(request):
         'user': user,
         'unread_notifications': unread_notifications,
         'read_notifications': read_notifications,
+        'current_profile': request.user,
     }
     user.profile.unread_notifications = 0
     user.profile.save()

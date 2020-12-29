@@ -59,6 +59,16 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.get_username()}'
 
+    def get_email(self):
+        return f'{User.email}'
+
+    def set_email(self, email):
+        self.user.email = email
+        self.user.save()
+
+    def set_password(self, password):
+        self.user.password = password
+        self.user.save()
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

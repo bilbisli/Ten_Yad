@@ -153,7 +153,6 @@
                             <form action="{% url 'accept_react_to_post' post.id reacted_user.pk %}" method="POST">
                             {% csrf_token %}
                             <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Approve</button>
-
                             </form>
                         {% endif %}
                     </li>

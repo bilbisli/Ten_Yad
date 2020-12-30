@@ -34,7 +34,6 @@ class Message(models.Model):
         return f'{self.notification}, {self.user.profile}, time: {self.time}'
 
 
-
 class Profile(models.Model):
     class Gender(models.TextChoices):
         FEMALE = "Female"
@@ -69,6 +68,7 @@ class Profile(models.Model):
     def set_password(self, password):
         self.user.password = password
         self.user.save()
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -117,8 +117,10 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField('title', max_length=MEDIUM_STRING)
     category = models.ForeignKey(Category, null=True, related_name='posts', on_delete=models.SET_NULL, blank=True)
-    post_type = models.CharField('post type', max_length=MEDIUM_STRING, null=True, choices=PostType.choices, default=PostType.REQUEST_ASSIST)
-    post_status = models.CharField('post status', max_length=MIN_STRING, null=True, choices=PostStatus.choices, default=PostStatus.ACTIVE)
+    post_type = models.CharField('post type', max_length=MEDIUM_STRING, null=True, choices=PostType.choices,
+                                 default=PostType.REQUEST_ASSIST)
+    post_status = models.CharField('post status', max_length=MIN_STRING, null=True, choices=PostStatus.choices,
+                                   default=PostStatus.ACTIVE)
     time_created = models.DateTimeField('time posted', default=now)
     time_updated_last = models.DateTimeField('last updated', default=now)
     location = models.CharField(max_length=MEDIUM_STRING)
@@ -141,8 +143,3 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', args=(str(self.id)))
-
-
-
-
-

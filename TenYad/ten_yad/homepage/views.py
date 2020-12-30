@@ -6,12 +6,11 @@ from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
 from .forms import AssistOfferForm, EditProfile, EditUser
 from django.urls import reverse
-
 from django.template import loader
-
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+
 
 POINT_FOR_ASSIST = 10
 
@@ -109,6 +108,7 @@ def change_password(request):
     return render(request, 'profile/change_password.html', {'form': form, 'current_profile': request.user})
 
 
+@login_required(login_url='/login/')
 def score_board(request):
     top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:5]
     top_scores = [(number + 1, user, calculate_rating(user)) for number, user in enumerate(top_scores)]
@@ -211,7 +211,8 @@ def AcceptReactView(request, pk, approved_reaction):
 
     msg = Message(user=user)
     msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"Your assist in : '{post.title}' was accept by {user.profile} contact details now appear on the post, click to view. "
+    msg.notification = f"Your assist in: '{post.title}' was accept by {post.user.profile} - " \
+                       f"contact details now appear on the post -click to view-"
     msg.save()
     user.profile.unread_notifications += 1
     user.profile.save()
@@ -230,7 +231,8 @@ def CompleteAssistView(request, pk, user_assist):
 
     msg = Message(user=user)
     msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"Your assist in : '{post.title}' was approved {POINT_FOR_ASSIST} added to your score congratulations!!"
+    msg.notification = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST} " \
+                       f"points added to your score congratulations!!"
     msg.save()
 
     user.profile.unread_notifications += 1
@@ -241,6 +243,7 @@ def CompleteAssistView(request, pk, user_assist):
         post.approved_reactions.remove(user)
     post.users_to_rate.add(user)
     return redirect(f'/posts/post?id={pk}')
+
 
 @login_required(login_url='/login/')
 def rate_user_view(request, pk, user_rate, amount_rate):
@@ -303,6 +306,7 @@ def post_history(request):
     return render(request, 'profile/post_history.html', context)
 
 
+@login_required(login_url='/login/')
 def Messages(request):
     user = request.user
     read_notifications = list(reversed(user.notifications.all()))
@@ -319,7 +323,4 @@ def Messages(request):
     user.profile.unread_notifications = 0
     user.profile.save()
     return render(request, 'messages/messages.html', context)
-
-
-
 

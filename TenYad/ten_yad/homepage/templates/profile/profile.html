@@ -3,18 +3,10 @@
     Ten Yad - {{user}}
 {% endblock %}
 {% block content %}
-    {% if user == current_profile %}
-        <div>
-            <a href="{% url 'profile_edit' %}" class="btn btn-success">
-                Edit Profile
-            </a>
-            <a href="{% url 'change_password' %}" class="btn btn-success">
-               Change Password
-            </a>
-        </div>
-    {% endif %}
+
     <div class="profile_title">
         <h1>{{name}}'s Profile
+
         {% if rating < 1 %}
             <span class="fa fa-star"></span>
             <span class="fa fa-star"></span>
@@ -53,6 +45,16 @@
             <span class="fa fa-star checked"></span>
         {% endif %}
         </h1>
+            {% if user == current_profile %}
+        <div>
+            <a href="{% url 'profile_edit' %}" class="btn btn-success btn-sm">
+                Edit Profile
+            </a>
+            <a href="{% url 'change_password' %}" class="btn btn-success btn-sm">
+               Change Password
+            </a>
+        </div>
+    {% endif %}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
         .checked {

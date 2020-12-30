@@ -190,12 +190,13 @@ def CancelReactView(request, pk, user_reaction_remove):
         raise Http404(f"Invalid post id: {pk}")
     # post = Post.objects.get(id=post_id)
     user = User.objects.get(id=user_reaction_remove)
-    if user in post.reactions.all():
-        post.reactions.remove(user)
-    if user in post.approved_reactions.all():
-        post.approved_reactions.remove(user)
-        if not post.approved_reactions.all():
-            post.post_status = Post.PostStatus.ACTIVE
+    if post.user.pk == request.user.pk or request.user.pk == user_reaction_remove:
+        if user in post.reactions.all():
+            post.reactions.remove(user)
+        if user in post.approved_reactions.all():
+            post.approved_reactions.remove(user)
+            if not post.approved_reactions.all():
+                post.post_status = Post.PostStatus.ACTIVE
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -206,16 +207,17 @@ def AcceptReactView(request, pk, approved_reaction):
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
     user = User.objects.get(id=approved_reaction)
-    post.approved_reactions.add(user)
-    post.post_status = Post.PostStatus.TRANSACTION
+    if request.user.pk == post.user.pk:
+        post.approved_reactions.add(user)
+        post.post_status = Post.PostStatus.TRANSACTION
 
-    msg = Message(user=user)
-    msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"Your assist in: '{post.title}' was accept by {post.user.profile} - " \
-                       f"contact details now appear on the post -click to view-"
-    msg.save()
-    user.profile.unread_notifications += 1
-    user.profile.save()
+        msg = Message(user=user)
+        msg.link = f"/posts/post?id={pk}"
+        msg.notification = f"Your assist in: '{post.title}' was accept by {post.user.profile} - " \
+                           f"contact details now appear on the post -click to view-"
+        msg.save()
+        user.profile.unread_notifications += 1
+        user.profile.save()
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -226,22 +228,23 @@ def CompleteAssistView(request, pk, user_assist):
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
     user = User.objects.get(id=user_assist)
-    post.users_assist.add(user)
-    user.profile.points += POINT_FOR_ASSIST
+    if request.user.pk == post.user.pk:
+        post.users_assist.add(user)
+        user.profile.points += POINT_FOR_ASSIST
 
-    msg = Message(user=user)
-    msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST} " \
-                       f"points added to your score congratulations!!"
-    msg.save()
+        msg = Message(user=user)
+        msg.link = f"/posts/post?id={pk}"
+        msg.notification = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST} " \
+                           f"points added to your score congratulations!!"
+        msg.save()
 
-    user.profile.unread_notifications += 1
-    user.profile.save()
-    if user in post.reactions.all():
-        post.reactions.remove(user)
-    if user in post.approved_reactions.all():
-        post.approved_reactions.remove(user)
-    post.users_to_rate.add(user)
+        user.profile.unread_notifications += 1
+        user.profile.save()
+        if user in post.reactions.all():
+            post.reactions.remove(user)
+        if user in post.approved_reactions.all():
+            post.approved_reactions.remove(user)
+        post.users_to_rate.add(user)
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -251,14 +254,16 @@ def rate_user_view(request, pk, user_rate, amount_rate):
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
-    user = User.objects.get(id=user_rate)
-    user.profile.rating_sum += amount_rate
-    user.profile.rating_count += 1
-    user.profile.save()
-    if request.user == post.user:
-        post.users_to_rate.remove(request.user)
-    else:
-        post.reacted_user_rate.remove(request.user)
+    current_profile = request.user
+    if current_profile.pk != user_rate and (post.user.pk == current_profile.pk or current_profile in post.reacted_user_rate.all()):
+        user = User.objects.get(id=user_rate)
+        user.profile.rating_sum += amount_rate
+        user.profile.rating_count += 1
+        user.profile.save()
+        if current_profile == post.user:
+            post.users_to_rate.remove(current_profile)
+        else:
+            post.reacted_user_rate.remove(current_profile)
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -279,8 +284,9 @@ def ReactivatePostView(request, pk):
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
-    post.post_status = Post.PostStatus.ACTIVE
-    post.save()
+    if request.user.pk == post.user.pk:
+        post.post_status = Post.PostStatus.ACTIVE
+        post.save()
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -290,7 +296,8 @@ def DeletePostView(request, pk):
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
-    post.delete()
+    if request.user.pk == post.user.pk:
+        post.delete()
     return redirect(f'/posts/history')
 
 

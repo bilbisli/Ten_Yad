@@ -16,7 +16,7 @@ def register(response):
                                     password=form.cleaned_data['password1'],
                                     )
             login(response, new_user)
-        return redirect("/")
+            return redirect("/")
     else:
         form = RegisterForm()
     return render(response, 'register/register.html', {'form': form})

@@ -174,7 +174,7 @@ def ReactView(request, pk):
     msg = Message()
     msg.user = user_post
     msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"New reaction to your post: {post.title}"
+    msg.notification = f"New reaction to your post: '{post.title}' from {request.user}"
     msg.save()
 
     user_post.profile.unread_notifications += 1

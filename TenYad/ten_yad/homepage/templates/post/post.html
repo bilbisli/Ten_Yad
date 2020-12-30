@@ -166,27 +166,22 @@
               <div class="btn-group" role="group" aria-label="First group">
                 <form action="{% url 'rate_user' post.id post.user.pk 1 %}" method="POST">
                     {% csrf_token %}
-                    type="submit",
                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
                 </form>
                <form action="{% url 'rate_user' post.id post.user.pk 2 %}" method="POST">
                     {% csrf_token %}
-                    type="submit",
                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
                 </form>
                                  <form action="{% url 'rate_user' post.id post.user.pk 3 %}" method="POST">
                     {% csrf_token %}
-                    type="submit",
                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
                 </form>
                                  <form action="{% url 'rate_user' post.id post.user.pk 4 %}" method="POST">
                     {% csrf_token %}
-                    type="submit",
                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
                 </form>
                                  <form action="{% url 'rate_user' post.id post.user.pk 5 %}" method="POST">
                     {% csrf_token %}
-                    type="submit",
                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
                 </form>
 

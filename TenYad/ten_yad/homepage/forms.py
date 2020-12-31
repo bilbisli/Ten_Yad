@@ -17,6 +17,8 @@ class AssistOfferForm(forms.ModelForm):
         ]
         exclude = ['user']
 
+
+
 class EditProfile(forms.ModelForm):
 
     class Meta:

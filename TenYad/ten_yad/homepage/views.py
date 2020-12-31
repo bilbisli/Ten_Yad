@@ -44,6 +44,31 @@ def post_page(request):
     }
     return render(request, 'post/post.html', context)
 
+@login_required(login_url='/login/')
+def edit_post(request):
+    post_id = request.GET['id']
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        raise Http404(f"Invalid post id: {post_id}")
+    if request.user.pk != post.user.pk:
+        return redirect(f'/posts/post?id={post_id}')
+    if request.method == 'POST':
+        assistance_form = AssistOfferForm(request.POST, instance=post)
+        if assistance_form.is_valid():
+            form = assistance_form.save()
+            # messages.success(request, f'New Post created!')
+            return redirect(f'/posts/post?id={post_id}')
+        else:
+            return redirect(f'/')
+    else:
+        assistance_form = AssistOfferForm(instance=post)
+    context = {
+        'form': assistance_form,
+        'current_profile': request.user,
+    }
+    return render(request, 'post/edit_post.html', context)
+
 
 @login_required(login_url='/login/')
 def user_profile(request):
@@ -174,7 +199,7 @@ def ReactView(request, pk):
     msg = Message()
     msg.user = user_post
     msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"New reaction to your post: {post.title}"
+    msg.notification = f"New reaction to your post: '{post.title}' from {request.user}"
     msg.save()
 
     user_post.profile.unread_notifications += 1

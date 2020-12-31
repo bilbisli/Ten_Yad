@@ -5,6 +5,9 @@
 {% block content %}
 
     <h2>title: {{post.title}}</h2>
+    {% if current_profile.pk == post.user.pk %}
+        <a href="edit_post?id={{post.id}}" class="btn btn-outline-secondary btn-sm">Edit Post</a>
+    {% endif %}
     <p>author: <a href="/user/profile?id={{post.user.id}}" >{{post.user.profile}}</a></p>
     {% if post.category %}
         <p>category: {{post.category}}</p>

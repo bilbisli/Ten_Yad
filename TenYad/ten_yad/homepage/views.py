@@ -110,7 +110,7 @@ def change_password(request):
 
 @login_required(login_url='/login/')
 def score_board(request):
-    top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:5]
+    top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:100]
     top_scores = [(number + 1, user, calculate_rating(user)) for number, user in enumerate(top_scores)]
 
     score_board_link = 'scoreboard'
@@ -245,6 +245,7 @@ def CompleteAssistView(request, pk, user_assist):
         if user in post.approved_reactions.all():
             post.approved_reactions.remove(user)
         post.users_to_rate.add(user)
+        post.reacted_user_rate.add(user)
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -260,8 +261,8 @@ def rate_user_view(request, pk, user_rate, amount_rate):
         user.profile.rating_sum += amount_rate
         user.profile.rating_count += 1
         user.profile.save()
-        if current_profile == post.user:
-            post.users_to_rate.remove(current_profile)
+        if current_profile.pk == post.user.pk:
+            post.users_to_rate.remove(user)
         else:
             post.reacted_user_rate.remove(current_profile)
     return redirect(f'/posts/post?id={pk}')

@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .models import User, Post, Message
+from .models import User, Post, Message, Category
 from django.utils.timezone import now, datetime
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
@@ -216,6 +216,7 @@ def ReactView(request, pk):
 
     user_post.profile.unread_notifications += 1
     user_post.save()
+
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -370,6 +371,7 @@ def Messages(request):
     return render(request, 'messages/messages.html', context)
 
 
+
 def certificate(request):
     user = request.user
     if user.profile.points > 200:
@@ -382,4 +384,19 @@ def certificate(request):
         res = send_mail('Congratulations you have won a certificate of appreciation', 'http://127.0.0.1:8000/certificate',
                         'tenyad1234@gmail.com', [user.email])
         return render(request, 'certificate/certificate.html')
+
+
+def get_category_assist_count(request):
+    # assist_count = {f'{k}': 0 if k else f'{k}': 0 for k in Category.objects.all()}
+    assist_count = {k.name: 0 for k in Category.objects.all()}
+    assist_count['No Category'] = 0
+    user = request.user
+    assisted_posts = [post for post in Post.objects.all() if user in post.users_assist.all()]
+    for post in assisted_posts:
+        if not post.category:
+            assist_count['No Category'] += 1
+        else:
+            assist_count[post.category.name] += 1
+
+    return render(request, 'assist_count/assist_count.html', {'assist_count': assist_count, 'user': user, 'assisted_posts': assisted_posts})
 

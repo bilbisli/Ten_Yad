@@ -4,6 +4,7 @@ from django.db import models
 # import django.contrib.auth
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -82,10 +83,11 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Category(models.Model):
-    def __str__(self):
-        return f'{self.name}'
     name = models.CharField(max_length=MEDIUM_STRING)
     time_signed = models.DateTimeField('time updated', default=now)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 # class PostType(models.Model):

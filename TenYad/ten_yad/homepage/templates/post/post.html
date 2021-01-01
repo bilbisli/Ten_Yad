@@ -3,7 +3,6 @@
     Ten Yad - post id: {{post.id}}
 {% endblock %}
 {% block content %}
-
     <h2>title: {{post.title}}</h2>
     {% if current_profile.pk == post.user.pk %}
         <a href="edit_post?id={{post.id}}" class="btn btn-outline-secondary btn-sm">Edit Post</a>
@@ -25,6 +24,11 @@
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
 
+    <script type="text/javascript">
+        $(window).on('load', function(e) {
+            $('#approveRepliers').modal('show');
+        });
+    </script>
     {% if user == post.user %}
         {% if not post.reactions.all and not post.approved_reactions.all and not post.users_to_rate.all %}
             <button type="button" class="btn btn-primary btn-sm" disabled data-bs-toggle="modal" data-bs-target="#approveRepliers">
@@ -60,45 +64,39 @@
                                 </ul>
                               </nav>
                               <div class="col-sm-9">
-
                                   {% for user_to_rate in post.users_to_rate.all %}
-
-                                          <h4><a href="/user/profile?id={{reacted_user.id}}" style="text-decoration: none">{{reacted_user.profile}}</a></h4>
-
-                                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                                              <div class="btn-group" role="group" aria-label="First group">
-                                                  <h4 style="margin-right:1em" ><a href="/user/profile?id={{user_to_rate.id}}" style="text-decoration: none">{{user_to_rate.profile}}</a></h4>
-                                                  <form action="{% url 'rate_user' post.id user_to_rate.pk 1 %}" method="POST">
-                                                        {% csrf_token %}
-                                                        <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
-                                                  </form>
-                                                  <form action="{% url 'rate_user' post.id user_to_rate.pk 2 %}" method="POST">
-                                                        {% csrf_token %}
-                                                        <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
-                                                  </form>
-                                                  <form action="{% url 'rate_user' post.id user_to_rate.pk 3 %}" method="POST">
-                                                        {% csrf_token %}
-                                                        <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
-                                                  </form>
-                                                                 <form action="{% url 'rate_user' post.id user_to_rate.pk 4 %}" method="POST">
+                                        <h4><a href="/user/profile?id={{reacted_user.id}}" style="text-decoration: none">{{reacted_user.profile}}</a></h4>
+                                        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                          <div class="btn-group" role="group" aria-label="First group">
+                                              <h4 style="margin-right:1em" ><a href="/user/profile?id={{user_to_rate.id}}" style="text-decoration: none">{{user_to_rate.profile}}</a></h4>
+                                              <form action="{% url 'rate_user' post.id user_to_rate.pk 1 %}" method="POST">
                                                     {% csrf_token %}
                                                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
-                                                  </form>
-                                                                 <form action="{% url 'rate_user' post.id user_to_rate.pk 5 %}" method="POST">
+                                              </form>
+                                              <form action="{% url 'rate_user' post.id user_to_rate.pk 2 %}" method="POST">
                                                     {% csrf_token %}
                                                     <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
-                                                  </form>
-
-
-
-                                              </div>
-                                            </div>
+                                              </form>
+                                              <form action="{% url 'rate_user' post.id user_to_rate.pk 3 %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
+                                              </form>
+                                                             <form action="{% url 'rate_user' post.id user_to_rate.pk 4 %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
+                                              </form>
+                                                             <form action="{% url 'rate_user' post.id user_to_rate.pk 5 %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" name="rating", value = "{{ post.pk }}" class="btn btn-outline-secondary"><span class="fa fa-star checked"></span></button>
+                                              </form>
+                                          </div>
+                                        </div>
                                     {% if not forloop.last or post.reactions.all %}
-                                          <hr>
+                                        <hr>
                                     {% endif %}
                                   {% endfor %}
                                 {% for reacted_user in post.reactions.all %}
-                                    <h4><a href="/user/profile?id={{reacted_user.id}}" style="text-decoration: none">{{reacted_user.profile}}</a></h4>
+                                    <h4 id = "{{ reacted_user }}"><a href="/user/profile?id={{reacted_user.id}}" style="text-decoration: none">{{reacted_user.profile}}</a></h4>
                                         <ul style="list-style-type: square ; padding-bottom: 0;">
                                             {% if reacted_user in post.approved_reactions.all %}
                                                 <form action="{% url 'cancel_react_to_post' post.id reacted_user.pk %}" method="POST">
@@ -131,6 +129,7 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   </div>
+
                 </div>
               </div>
             </div>

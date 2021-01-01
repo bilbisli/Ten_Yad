@@ -20,5 +20,6 @@ urlpatterns = [
     url(f'Messages', Messages, name='Messages'),
     url(f'change_password', change_password, name='change_password'),
     url(f'edit_post', edit_post, name='edit_post'),
+    url(f'count_assists', get_category_assist_count, name='count_assists'),
     ]
 

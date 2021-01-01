@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import User, Post, Message
@@ -6,6 +7,17 @@ from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
 from .forms import AssistOfferForm, EditProfile, EditUser
 from django.urls import reverse
+from .forms import AssistOfferForm, EditProfile, SubscribeForm
+from django.urls import reverse
+
+from django.contrib import messages
+from django.conf import settings
+from django.conf import global_settings
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import EmailMessage
 from django.template import loader
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -356,4 +368,18 @@ def Messages(request):
     user.profile.unread_notifications = 0
     user.profile.save()
     return render(request, 'messages/messages.html', context)
+
+
+def certificate(request):
+    user = request.user
+    if user.profile.points > 200:
+        msg = Message(user=user)
+        msg.link = f"/"
+        msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
+        msg.save()
+        user.profile.unread_notifications += 1
+        user.profile.save()
+        res = send_mail('Congratulations you have won a certificate of appreciation', 'http://127.0.0.1:8000/certificate',
+                        'tenyad1234@gmail.com', [user.email])
+        return render(request, 'certificate/certificate.html')
 

@@ -1,7 +1,7 @@
 """Pynche -- The PYthon Natural Color and Hue Editor.
 
 Contact: %(AUTHNAME)s
-Email:   %(AUTHEMAIL)s
+certificate:   %(AUTHEMAIL)s
 Version: %(__version__)s
 
 Pynche is based largely on a similar color editor I wrote years ago for the
@@ -206,7 +206,7 @@ def main():
             print("""\
 Pynche -- The PYthon Natural Color and Hue Editor.
 Contact: %(AUTHNAME)s
-Email:   %(AUTHEMAIL)s
+certificate:   %(AUTHEMAIL)s
 Version: %(__version__)s""" % globals())
             sys.exit(0)
         elif opt in ('-d', '--database'):

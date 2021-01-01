@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - {{user}}
+{% endblock %}
+{% block content %}
+
+    <div class="certificate_title">
+        <h1>This certificate is awarded to {{user.get_full_name}}</h1>
+        <h2>The number of points he earned as a result of volunteering {{user.profile.points}}</h2>
+    </div>
+    <div>
+            <h3 style="color:rgb(0, 0, 0);">Icons accumulated :</h3>
+                    {% if user.profile.points >= 50 %}
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="55" height="55" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M12 6l4 6l5-4l-2 10H5L3 8l5 4z" fill="none" stroke="#626262" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="0" y="0" width="24" height="24" fill="rgba(0, 0, 0, 0)" /></svg>
+            {% endif %}
+            {% if user.profile.points >= 100 %}
+                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="50" height="50" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5m14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z" fill="#626262"/><rect x="0" y="0" width="100" height="100" fill="rgba(0, 0, 0, 0)" /></svg>
+            {% endif %}
+            {% if user.profile.points >= 200 %}
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                    width="50" height="50"
+                    viewBox="0 0 172 172"
+                    style=" fill:#000000;"><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="" fill="none"></path><path d="" fill="none"></path><g><path d="M129,129h-86l-17.91667,-71.66667l35.83333,28.66667l25.08333,-46.58333l25.08333,46.58333l35.83333,-28.66667z" fill="#ffc107"></path><path d="M43,129h86v17.91667h-86zM86,25.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM150.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM21.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z" fill="#ff9800"></path></g></g></g></svg>
+            {% endif %}
+        </div>
+{% endblock %}
+

@@ -67,3 +67,8 @@ class EditUser(forms.ModelForm):
         if commit:
             user.profile.save()
         return user
+
+
+class SubscribeForm(forms.Form):
+    email = forms.EmailField()
+

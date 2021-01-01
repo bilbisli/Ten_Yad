@@ -143,3 +143,7 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', args=(str(self.id)))
+
+
+class certificate(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)

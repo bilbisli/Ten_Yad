@@ -21,5 +21,6 @@ urlpatterns = [
     url(f'change_password', change_password, name='change_password'),
     url(f'edit_post', edit_post, name='edit_post'),
     url(f'count_assists', get_category_assist_count, name='count_assists'),
+    url(f'contact_admin', contact_admin, name='contact_admin'),
     ]
 

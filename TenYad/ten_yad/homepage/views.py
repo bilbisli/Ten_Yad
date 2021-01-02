@@ -1,16 +1,17 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import User, Post, Message, Category
 from django.utils.timezone import now, datetime
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
-from .forms import AssistOfferForm, EditProfile, EditUser
+from .forms import *
 from django.urls import reverse
 from django.template import loader
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
+from django.core.mail import send_mail, BadHeaderError
 
 POINT_FOR_ASSIST = 10
 
@@ -364,11 +365,51 @@ def get_category_assist_count(request):
     assist_count = {k.name: 0 for k in Category.objects.all()}
     assist_count['No Category'] = 0
     user = request.user
-    assisted_posts = [post for post in Post.objects.all() if user in post.users_assist.all()]
-    for post in assisted_posts:
+
+    for post in filter(lambda some_post: user in some_post.users_assist.all(), Post.objects.all()):
         if not post.category:
             assist_count['No Category'] += 1
         else:
             assist_count[post.category.name] += 1
 
-    return render(request, 'assist_count/assist_count.html', {'assist_count': assist_count, 'user': user, 'assisted_posts': assisted_posts})
+    # assisted_posts = [post for post in Post.objects.all() if user in post.users_assist.all()]
+    # for post in assisted_posts:
+    #     if not post.category:
+    #         assist_count['No Category'] += 1
+    #     else:
+    #         assist_count[post.category.name] += 1
+
+    return render(request, 'assist_count/assist_count.html', {'assist_count': assist_count, 'user': user})
+
+
+def contact_admin(request):
+    user = request.user
+    if request.method == 'GET':
+        form = ContactAdminForm()
+    else:
+        form = ContactAdminForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject, message, request.user.email, [settings.EMAIL_HOST_USER])
+            except BadHeaderError:
+                raise Http404("Invalid header")
+            send_alert(
+                user=user,
+                message=f"you're email '{subject}' was sent to admin")
+            return redirect('/')
+    context = {
+        'form': form,
+        'current_profile': user,
+    }
+    return render(request, "contact_admin/contact_admin.html", context)
+
+
+def send_alert(user, message, link=None):
+    msg = Message(user=user)
+    msg.link = link
+    msg.notification = message
+    msg.save()
+    user.profile.unread_notifications += 1
+    user.profile.save()

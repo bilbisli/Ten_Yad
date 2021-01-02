@@ -2,6 +2,7 @@ from django import forms
 from .models import Post, Profile, User
 from django.contrib.auth.forms import UserChangeForm
 
+
 class AssistOfferForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -18,9 +19,7 @@ class AssistOfferForm(forms.ModelForm):
         exclude = ['user']
 
 
-
 class EditProfile(forms.ModelForm):
-
     class Meta:
         model = Profile
         fields = [
@@ -51,6 +50,7 @@ class EditProfile(forms.ModelForm):
             user.profile.save()
         return user
 
+
 class EditUser(forms.ModelForm):
     email = forms.EmailField()
 
@@ -67,3 +67,9 @@ class EditUser(forms.ModelForm):
         if commit:
             user.profile.save()
         return user
+
+
+class ContactAdminForm(forms.Form):
+    subject = forms.CharField(required=True)
+    message = forms.CharField(widget=forms.Textarea)
+

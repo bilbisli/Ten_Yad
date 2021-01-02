@@ -28,7 +28,7 @@ MAX_STRING = 1023
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', null=True)
     notification = models.CharField('notification', max_length=LARGE_STRING, blank=True, default='')
-    link = models.URLField("link", max_length=LARGE_STRING, blank=True, default='')
+    link = models.URLField("link", max_length=LARGE_STRING, blank=True, null=True)
     time = models.DateTimeField('alert_time', default=now)
 
     def __str__(self):
@@ -55,6 +55,7 @@ class Profile(models.Model):
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     unread_notifications = models.IntegerField(default=0)
+    is_representative = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.get_username()}'

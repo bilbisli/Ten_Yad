@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - Contact Admin
+{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <form method="POST">
+        <div class="col-md-6">
+            {{ form.as_p }}
+        </div>
+        {% csrf_token %}
+        <p>*Please specify if you are a non-profit organization representative.</p>
+        <button type="submit" class="btn btn-success" name="save">Send</button>
+    </form>
+
+{% endblock %}

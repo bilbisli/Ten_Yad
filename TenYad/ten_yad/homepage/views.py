@@ -389,8 +389,10 @@ def contact_admin(request):
     else:
         form = ContactAdminForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
+            subject = "Ten Yad Contact Admin: "
+            subject = subject + form.cleaned_data['subject']
+            message = f"A message was sent from Ten Yad - user (ID {user.pk}): {user.profile} ({user.email})\n"
+            message = message + form.cleaned_data['message']
             try:
                 send_mail(subject, message, request.user.email, [settings.EMAIL_HOST_USER])
             except BadHeaderError:

@@ -29,6 +29,19 @@ POINT_FOR_ASSIST = 10
 
 @login_required(login_url='/login/')
 def homepage(request):
+    user = request.user
+    if not user.profile.certificate:
+        if user.profile.points > 200:
+            user.profile.certificate = True
+            user.profile.unread_notifications += 1
+            user.profile.save()
+            msg = Message(user=user)
+            msg.link = f"/certificate?id={user.pk}"
+            msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
+            msg.save()
+            res = send_mail('Congratulations you have won a certificate of appreciation',
+                            f'http://127.0.0.1:8000/certificate?id={user.pk}',
+                            settings.EMAIL_HOST_USER, [user.email])
     posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE)
     # show_posts = posts.order_by('-id')[:100]
     post_filter = PostSearch(request.GET, queryset=posts)
@@ -37,6 +50,7 @@ def homepage(request):
                'show_posts': show_posts,
                'post_filter': post_filter,
                'current_profile': request.user,
+               'user': user,
                }
     return render(request, 'homepage/homepage.html', context)
 
@@ -373,17 +387,20 @@ def Messages(request):
 
 
 def certificate(request):
-    user = request.user
-    if user.profile.points > 200:
-        msg = Message(user=user)
-        msg.link = f"/"
-        msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
-        msg.save()
-        user.profile.unread_notifications += 1
-        user.profile.save()
-        res = send_mail('Congratulations you have won a certificate of appreciation', 'http://127.0.0.1:8000/certificate',
-                        'tenyad1234@gmail.com', [user.email])
-        return render(request, 'certificate/certificate.html')
+    user_id = request.GET['id']
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        raise Http404(f"Invalid user id: {user_id}")
+    if user.profile.certificate:
+        context = {
+            'current_profile': request.user,
+            'user': user,
+        }
+        return render(request, 'certificate/certificate.html', context)
+    return redirect('/')
+
+
 
 
 def get_category_assist_count(request):

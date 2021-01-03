@@ -55,6 +55,7 @@ class Profile(models.Model):
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     unread_notifications = models.IntegerField(default=0)
+    certificate = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.get_username()}'
@@ -146,6 +147,3 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post', args=(str(self.id)))
 
-
-class certificate(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)

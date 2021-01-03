@@ -17,18 +17,6 @@ POINT_FOR_ASSIST = 10
 @login_required(login_url='/login/')
 def homepage(request):
     user = request.user
-    if not user.profile.certificate:
-        if user.profile.points > 200:
-            user.profile.certificate = True
-            user.profile.unread_notifications += 1
-            user.profile.save()
-            msg = Message(user=user)
-            msg.link = f"/certificate?id={user.pk}"
-            msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
-            msg.save()
-            res = send_mail('Congratulations you have won a certificate of appreciation',
-                            f'http://127.0.0.1:8000/certificate?id={user.pk}',
-                            settings.EMAIL_HOST_USER, [user.email])
     posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE).order_by('time_updated_last')
     post_filter = PostSearch(request.GET, queryset=posts)
     show_posts = post_filter.qs
@@ -437,13 +425,9 @@ def check_send_certificate(user):
     if not user.profile.certificate:
         if user.profile.points > 200:
             user.profile.certificate = True
-            user.profile.unread_notifications += 1
-            user.profile.save()
-            msg = Message(user=user)
-            msg.link = f"/certificate?id={user.pk}"
-            msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
-            msg.save()
-            res = send_mail('Congratulations you have won a certificate of appreciation',
+            send_alert(user, f"Congratulations you have won a certificate of appreciation, "
+                             f"please check your email !", link=f"/certificate?id={user.pk}")
+            res = send_mail('Congratulations you have won a certificate of appreciation from "Ten-Yad"',
                             f'http://127.0.0.1:8000/certificate?id={user.pk}',
                             settings.EMAIL_HOST_USER, [user.email])
 
@@ -451,4 +435,5 @@ def check_send_certificate(user):
 def add_points(user, amount):
     user.profile.points += amount
     user.profile.save()
+    check_send_certificate(user)
 

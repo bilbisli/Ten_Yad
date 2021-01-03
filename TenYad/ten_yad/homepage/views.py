@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-from django.conf import settings
-=======
 
->>>>>>> main
+from django.conf import settings
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import User, Post, Message, Category
@@ -453,3 +451,18 @@ def send_alert(user, message, link=None):
     msg.save()
     user.profile.unread_notifications += 1
     user.profile.save()
+
+
+def check_send_certificate(user):
+    if not user.profile.certificate:
+        if user.profile.points > 200:
+            user.profile.certificate = True
+            user.profile.unread_notifications += 1
+            user.profile.save()
+            msg = Message(user=user)
+            msg.link = f"/certificate?id={user.pk}"
+            msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
+            msg.save()
+            res = send_mail('Congratulations you have won a certificate of appreciation',
+                            f'http://127.0.0.1:8000/certificate?id={user.pk}',
+                            settings.EMAIL_HOST_USER, [user.email])

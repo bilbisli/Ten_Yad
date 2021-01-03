@@ -269,16 +269,11 @@ def CompleteAssistView(request, pk, user_assist):
     user = User.objects.get(id=user_assist)
     if request.user.pk == post.user.pk:
         post.users_assist.add(user)
-        user.profile.points += POINT_FOR_ASSIST
+        add_points(user=user, amount=POINT_FOR_ASSIST)
+        msg = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST}" \
+              f" points added to your score congratulations!!"
+        send_alert(user=user, message=msg, link=f"/posts/post?id={pk}")
 
-        msg = Message(user=user)
-        msg.link = f"/posts/post?id={pk}"
-        msg.notification = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST} " \
-                           f"points added to your score congratulations!!"
-        msg.save()
-
-        user.profile.unread_notifications += 1
-        user.profile.save()
         if user in post.reactions.all():
             post.reactions.remove(user)
         if user in post.approved_reactions.all():
@@ -435,4 +430,9 @@ def send_alert(user, message, link=None):
     msg.notification = message
     msg.save()
     user.profile.unread_notifications += 1
+    user.profile.save()
+
+
+def add_points(user, amount):
+    user.profile.points += amount
     user.profile.save()

@@ -73,3 +73,7 @@ class ContactAdminForm(forms.Form):
     subject = forms.CharField(required=True)
     message = forms.CharField(widget=forms.Textarea)
 
+
+class SubscribeForm(forms.Form):
+    email = forms.EmailField()
+

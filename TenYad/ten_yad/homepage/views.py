@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from django.conf import settings
+=======
+
+>>>>>>> main
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from .models import User, Post, Message, Category
@@ -7,6 +11,17 @@ from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
 from .forms import *
 from django.urls import reverse
+from .forms import AssistOfferForm, EditProfile, SubscribeForm
+from django.urls import reverse
+
+from django.contrib import messages
+from django.conf import settings
+from django.conf import global_settings
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import EmailMessage
 from django.template import loader
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -18,6 +33,19 @@ POINT_FOR_ASSIST = 10
 
 @login_required(login_url='/login/')
 def homepage(request):
+    user = request.user
+    if not user.profile.certificate:
+        if user.profile.points > 200:
+            user.profile.certificate = True
+            user.profile.unread_notifications += 1
+            user.profile.save()
+            msg = Message(user=user)
+            msg.link = f"/certificate?id={user.pk}"
+            msg.notification = f"Congratulations you have won a certificate of appreciation, please check your email !"
+            msg.save()
+            res = send_mail('Congratulations you have won a certificate of appreciation',
+                            f'http://127.0.0.1:8000/certificate?id={user.pk}',
+                            settings.EMAIL_HOST_USER, [user.email])
     posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE)
     # show_posts = posts.order_by('-id')[:100]
     post_filter = PostSearch(request.GET, queryset=posts)
@@ -26,6 +54,7 @@ def homepage(request):
                'show_posts': show_posts,
                'post_filter': post_filter,
                'current_profile': request.user,
+               'user': user,
                }
     return render(request, 'homepage/homepage.html', context)
 
@@ -360,6 +389,22 @@ def Messages(request):
     return render(request, 'messages/messages.html', context)
 
 
+
+def certificate(request):
+    user_id = request.GET['id']
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        raise Http404(f"Invalid user id: {user_id}")
+    if user.profile.certificate:
+        context = {
+            'current_profile': request.user,
+            'user': user,
+        }
+        return render(request, 'certificate/certificate.html', context)
+    return redirect('/')
+
+
 def get_category_assist_count(request):
     # assist_count = {f'{k}': 0 if k else f'{k}': 0 for k in Category.objects.all()}
     assist_count = {k.name: 0 for k in Category.objects.all()}
@@ -371,13 +416,6 @@ def get_category_assist_count(request):
             assist_count['No Category'] += 1
         else:
             assist_count[post.category.name] += 1
-
-    # assisted_posts = [post for post in Post.objects.all() if user in post.users_assist.all()]
-    # for post in assisted_posts:
-    #     if not post.category:
-    #         assist_count['No Category'] += 1
-    #     else:
-    #         assist_count[post.category.name] += 1
 
     return render(request, 'assist_count/assist_count.html', {'assist_count': assist_count, 'user': user})
 

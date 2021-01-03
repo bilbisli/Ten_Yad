@@ -56,6 +56,7 @@ class Profile(models.Model):
     rating_count = models.IntegerField(default=0)
     unread_notifications = models.IntegerField(default=0)
     is_representative = models.BooleanField(default=False)
+    certificate = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.get_username()}'
@@ -146,3 +147,4 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', args=(str(self.id)))
+

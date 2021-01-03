@@ -1,28 +1,13 @@
-
-from django.conf import settings
-
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .models import User, Post, Message, Category
-from django.utils.timezone import now, datetime
+from django.http import HttpResponse, Http404
+from .models import Message, Category
+from django.utils.timezone import datetime, now
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
 from .forms import *
-from django.urls import reverse
-from .forms import AssistOfferForm, EditProfile, SubscribeForm
-from django.urls import reverse
-
-from django.contrib import messages
+from .forms import AssistOfferForm, EditProfile
 from django.conf import settings
-from django.conf import global_settings
-from django.core.mail import send_mail
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.core.mail import EmailMessage
-from django.template import loader
-from django.views.generic import ListView, DetailView, CreateView
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail, BadHeaderError
 
@@ -44,12 +29,11 @@ def homepage(request):
             res = send_mail('Congratulations you have won a certificate of appreciation',
                             f'http://127.0.0.1:8000/certificate?id={user.pk}',
                             settings.EMAIL_HOST_USER, [user.email])
-    posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE)
-    # show_posts = posts.order_by('-id')[:100]
+    posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE).order_by('time_updated_last')
     post_filter = PostSearch(request.GET, queryset=posts)
     show_posts = post_filter.qs
     context = {'page_title': 'homepage',
-               'show_posts': show_posts,
+               'show_posts': show_posts[::-1],
                'post_filter': post_filter,
                'current_profile': request.user,
                'user': user,
@@ -84,6 +68,7 @@ def edit_post(request):
     if request.method == 'POST':
         assistance_form = AssistOfferForm(request.POST, instance=post)
         if assistance_form.is_valid():
+            assistance_form.instance.time_updated_last = now()
             form = assistance_form.save()
             # messages.success(request, f'New Post created!')
             return redirect(f'/posts/post?id={post_id}')
@@ -284,16 +269,11 @@ def CompleteAssistView(request, pk, user_assist):
     user = User.objects.get(id=user_assist)
     if request.user.pk == post.user.pk:
         post.users_assist.add(user)
-        user.profile.points += POINT_FOR_ASSIST
+        add_points(user=user, amount=POINT_FOR_ASSIST)
+        msg = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST}" \
+              f" points added to your score congratulations!!"
+        send_alert(user=user, message=msg, link=f"/posts/post?id={pk}")
 
-        msg = Message(user=user)
-        msg.link = f"/posts/post?id={pk}"
-        msg.notification = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST} " \
-                           f"points added to your score congratulations!!"
-        msg.save()
-
-        user.profile.unread_notifications += 1
-        user.profile.save()
         if user in post.reactions.all():
             post.reactions.remove(user)
         if user in post.approved_reactions.all():
@@ -466,3 +446,9 @@ def check_send_certificate(user):
             res = send_mail('Congratulations you have won a certificate of appreciation',
                             f'http://127.0.0.1:8000/certificate?id={user.pk}',
                             settings.EMAIL_HOST_USER, [user.email])
+
+
+def add_points(user, amount):
+    user.profile.points += amount
+    user.profile.save()
+

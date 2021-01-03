@@ -1,6 +1,5 @@
 from django import forms
 from .models import Post, Profile, User
-from django.contrib.auth.forms import UserChangeForm
 
 
 class AssistOfferForm(forms.ModelForm):
@@ -16,7 +15,7 @@ class AssistOfferForm(forms.ModelForm):
             'content',
             'equipment',
         ]
-        exclude = ['user']
+        exclude = ['user', 'time_updated_last']
 
 
 class EditProfile(forms.ModelForm):
@@ -72,8 +71,3 @@ class EditUser(forms.ModelForm):
 class ContactAdminForm(forms.Form):
     subject = forms.CharField(required=True)
     message = forms.CharField(widget=forms.Textarea)
-
-
-class SubscribeForm(forms.Form):
-    email = forms.EmailField()
-

@@ -196,16 +196,7 @@ def ReactView(request, pk):
     # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
     user_post = post.user
-
-    msg = Message()
-    msg.user = user_post
-    msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"New reaction to your post: '{post.title}' from {request.user}"
-    msg.save()
-
-    user_post.profile.unread_notifications += 1
-    user_post.save()
-
+    send_alert(user_post, f"New reaction to your post: '{post.title}' from {request.user}", link=f"/posts/post?id={pk}")
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -237,14 +228,8 @@ def AcceptReactView(request, pk, approved_reaction):
     if request.user.pk == post.user.pk:
         post.approved_reactions.add(user)
         post.post_status = Post.PostStatus.TRANSACTION
-
-        msg = Message(user=user)
-        msg.link = f"/posts/post?id={pk}"
-        msg.notification = f"Your assist in: '{post.title}' was accept by {post.user.profile} - " \
-                           f"contact details now appear on the post -click to view-"
-        msg.save()
-        user.profile.unread_notifications += 1
-        user.profile.save()
+        send_alert(user, f"Your assist in: '{post.title}' was accept by {post.user.profile} - "
+                         f"contact details now appear on the post -click to view-", link=f"/posts/post?id={pk}")
     return redirect(f'/posts/post?id={pk}')
 
 

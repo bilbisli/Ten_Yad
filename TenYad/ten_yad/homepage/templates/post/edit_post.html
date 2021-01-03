@@ -8,7 +8,7 @@
     <form method="POST">
         {% csrf_token %}
         <div class="col-md-6">
-            {{ form.as_p }}
+            {{ form|crispy }}
         </div>
 
 <!--            <label for="inputEmail4" class="form-label">Email</label>-->

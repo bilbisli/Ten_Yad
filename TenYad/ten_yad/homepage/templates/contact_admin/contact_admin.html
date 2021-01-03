@@ -6,7 +6,7 @@
 {% block content %}
     <form method="POST">
         <div class="col-md-6">
-            {{ form.as_p }}
+            {{ form|crispy }}
         </div>
         {% csrf_token %}
         <p>*Please specify if you are a non-profit organization representative.</p>

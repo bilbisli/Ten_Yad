@@ -2,6 +2,7 @@
 {% block title %}
     Ten Yad - Homepage
 {% endblock %}
+{% load crispy_forms_tags %}
 {% block content %}
     <h2>Homepage</h2>
 
@@ -17,7 +18,7 @@
     <div class="search_posts">
         <form method="get">
 <!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-            {{ post_filter.form }}
+            {{ post_filter.form|crispy }}
             <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
         </form>
     </div>

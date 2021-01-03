@@ -8,8 +8,8 @@
     <form method="POST">
         {% csrf_token %}
         <div class="col-md-6">
-            {{ formUser.as_p }}
-            {{ form.as_p }}
+            {{ formUser|crispy }}
+            {{ form|crispy }}
         </div>
 
 <!--            <label for="inputEmail4" class="form-label">Email</label>-->

@@ -1,5 +1,6 @@
 import unittest
-from .models import *
+
+
 
 class ModelsTestCase(unittest.TestCase):
     def setUp(self):
@@ -30,3 +31,21 @@ class ModelsTestCase(unittest.TestCase):
     def test_post_fields(self):
         post = Post.objects.get(content="help me with homework")
         self.assertTrue(post.equipment == "need a car")
+
+
+def main():
+    ModelsTestCase
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+class MyTestCase(unittest.TestCase):
+    def test_something(self):
+        self.assertEqual(True, False)
+
+
+if __name__ == '__main__':
+    unittest.main()

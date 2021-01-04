@@ -356,17 +356,17 @@ def certificate(request):
 
 def SearchVolunteersView(request, category=None, count=None):
     user = request.user
-
-    users = [user for user in User.objects.all() if filter(lambda category_assist: category_assist[category] >= count,
-                                                           calculate_assists_categories(user))]
-
+    users = []
+    for user_check in User.objects.all():
+        calculate_assists_categories(user)
+        users = [user for user in User.objects.all()
+                 if filter(lambda category_assist: category_assist[category] >= count,
+                                                           calculate_assists_categories(user_check))]
     context = {
         'searchVolunteers': users,
         'user': user,
-
-
+        'categories': Category.objects.all(),
     }
-
     return render(request, 'searchVolunteers/searchVolunteers.html', context)
 
 

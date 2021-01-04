@@ -82,7 +82,7 @@ def user_profile(request):
         raise Http404(f"Invalid user id: {user_id}")
 
     rating = calculate_rating(user)
-
+    assist_count = calculate_assists_categories(user)
     if user.profile.birth_date and user.profile.birth_date.year:
         age = datetime.today().year - user.profile.birth_date.year
     else:
@@ -95,6 +95,7 @@ def user_profile(request):
         'rating': rating,
         'current_profile': request.user,
         'MAX_POINT': MAX_POINT,
+        'Max_Assist': max(assist_count.values()),
 
     }
     return render(request, 'profile/profile.html', context)
@@ -245,7 +246,8 @@ def CompleteAssistView(request, pk, user_assist):
         msg = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST}" \
               f" points added to your score congratulations!!"
         send_alert(user=user, message=msg, link=f"/posts/post?id={pk}")
-
+        if post.category:
+            get_icon(user, post.category.name)
         if user in post.reactions.all():
             post.reactions.remove(user)
         if user in post.approved_reactions.all():
@@ -440,3 +442,27 @@ def calculate_assists_categories(user):
         else:
             assist_count[post.category.name] += 1
     return assist_count
+
+
+def get_icon(user, category):
+    assist_count = calculate_assists_categories(user)
+    max_category = 0
+    for k, v in assist_count.items():
+        if max_category < v and k != category:
+            max_category = v
+    if assist_count[category] > max_category:
+        if user.profile.points >= 50 and assist_count[category] == 3:
+            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+        if user.profile.points >= 100 and assist_count[category] == 5:
+            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+        if user.profile.points >= 200 and assist_count[category] == 7:
+            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+
+
+
+
+
+
+
+
+

@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
 # from .views import login, register
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 app_name = 'homepage'
 
@@ -26,3 +27,5 @@ urlpatterns = [
     url('', include('homepage.urls')),
     path('', include(f"django.contrib.auth.urls"))
 ]
+
+urlpatterns += staticfiles_urlpatterns()

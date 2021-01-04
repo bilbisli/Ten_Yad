@@ -19,12 +19,6 @@ XL_STRING = 511
 MAX_STRING = 1023
 
 
-# class Gender(models.Model):
-#     gender = models.CharField(max_length=MIN_STRING)
-#
-#     def __str__(self):
-#         return f'{self.gender}'
-
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', null=True)
     notification = models.CharField('notification', max_length=LARGE_STRING, blank=True, default='')

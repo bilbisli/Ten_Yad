@@ -130,7 +130,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'homepage/templates/assets')
 ]
 
-CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = "/"

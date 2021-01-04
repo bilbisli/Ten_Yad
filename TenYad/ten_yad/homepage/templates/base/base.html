@@ -39,8 +39,6 @@
                             </a>
                         </li>
                     </ul>
-
-
                     <div class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://img.icons8.com/fluent/30/000000/settings.png"/>
@@ -68,7 +66,34 @@
                 {% block content %}
                 {% endblock %}
         <!-- Optional JavaScript; choose one of the two! -->
-
+                <div class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://img.icons8.com/fluent/30/000000/settings.png"/>
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'post_history' %}">Post History</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                    <li><a class="dropdown-item" href="{% url 'contact_admin' %}">Contact Admin</a></li>
+                  </ul>
+                </div>
+                {% if user.profile.unread_notifications %}
+                    <a class="nav-link" href="/Messages">Messages <txt style="font-size:14px; color:#FF0000; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                {% else %}
+                    <a class="nav-link" href="/Messages">Messages <txt style="font-size:14px; color:#808080; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                {% endif %}
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
+          </div>
+        </nav>
+        {% endif %}
+    <br/>
+    <div class="container">
+        <div id="content", name="content">
+            {% block content %}
+            {% endblock %}
+        </div>
         <!-- Option 1: Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 

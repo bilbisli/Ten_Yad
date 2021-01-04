@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - Edit Profile
+{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <ul>
+        {{post.time_updated_last}}<a href="/user/profile?id={{user.id}}" >{{user.profile}}'s</a> Assist count:
+        {% for k, v in assist_count.items %}
+            <li>
+                Category '{{ k }}': {{ v }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

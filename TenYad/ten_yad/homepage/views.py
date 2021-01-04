@@ -1,30 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .models import User, Post, Message
-from django.utils.timezone import now, datetime
+from django.http import HttpResponse, Http404
+from .models import Message, Category
+from django.utils.timezone import datetime, now
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
-from .forms import AssistOfferForm, EditProfile, EditUser
-from django.urls import reverse
-from django.template import loader
-from django.views.generic import ListView, DetailView, CreateView
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from .forms import *
+from .forms import AssistOfferForm, EditProfile
+from django.conf import settings
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
+from django.core.mail import send_mail, BadHeaderError
 
 POINT_FOR_ASSIST = 10
 
 
 @login_required(login_url='/login/')
 def homepage(request):
-    posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE)
-    # show_posts = posts.order_by('-id')[:100]
+    user = request.user
+    posts = Post.objects.exclude(post_status=Post.PostStatus.ARCHIVE).order_by('time_updated_last')
     post_filter = PostSearch(request.GET, queryset=posts)
     show_posts = post_filter.qs
     context = {'page_title': 'homepage',
-               'show_posts': show_posts,
+               'show_posts': show_posts[::-1],
                'post_filter': post_filter,
                'current_profile': request.user,
+               'user': user,
                }
     return render(request, 'homepage/homepage.html', context)
 
@@ -56,6 +56,7 @@ def edit_post(request):
     if request.method == 'POST':
         assistance_form = AssistOfferForm(request.POST, instance=post)
         if assistance_form.is_valid():
+            assistance_form.instance.time_updated_last = now()
             form = assistance_form.save()
             # messages.success(request, f'New Post created!')
             return redirect(f'/posts/post?id={post_id}')
@@ -135,7 +136,7 @@ def change_password(request):
 
 @login_required(login_url='/login/')
 def score_board(request):
-    top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:5]
+    top_scores = sorted(User.objects.all(), key=lambda user: user.profile.points, reverse=True)[:100]
     top_scores = [(number + 1, user, calculate_rating(user)) for number, user in enumerate(top_scores)]
 
     score_board_link = 'scoreboard'
@@ -195,15 +196,7 @@ def ReactView(request, pk):
     # post = Post.objects.get(id=post_id)
     post.reactions.add(request.user)
     user_post = post.user
-
-    msg = Message()
-    msg.user = user_post
-    msg.link = f"/posts/post?id={pk}"
-    msg.notification = f"New reaction to your post: '{post.title}' from {request.user}"
-    msg.save()
-
-    user_post.profile.unread_notifications += 1
-    user_post.save()
+    send_alert(user_post, f"New reaction to your post: '{post.title}' from {request.user}", link=f"/posts/post?id={pk}")
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -246,6 +239,10 @@ def AcceptReactView(request, pk, approved_reaction):
             user.profile.save()
         else:
             return redirect(f'/posts/post?id={pk}')
+        post.approved_reactions.add(user)
+        post.post_status = Post.PostStatus.TRANSACTION
+        send_alert(user, f"Your assist in: '{post.title}' was accept by {post.user.profile} - "
+                         f"contact details now appear on the post -click to view-", link=f"/posts/post?id={pk}")
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -258,21 +255,17 @@ def CompleteAssistView(request, pk, user_assist):
     user = User.objects.get(id=user_assist)
     if request.user.pk == post.user.pk:
         post.users_assist.add(user)
-        user.profile.points += POINT_FOR_ASSIST
+        add_points(user=user, amount=POINT_FOR_ASSIST)
+        msg = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST}" \
+              f" points added to your score congratulations!!"
+        send_alert(user=user, message=msg, link=f"/posts/post?id={pk}")
 
-        msg = Message(user=user)
-        msg.link = f"/posts/post?id={pk}"
-        msg.notification = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST} " \
-                           f"points added to your score congratulations!!"
-        msg.save()
-
-        user.profile.unread_notifications += 1
-        user.profile.save()
         if user in post.reactions.all():
             post.reactions.remove(user)
         if user in post.approved_reactions.all():
             post.approved_reactions.remove(user)
         post.users_to_rate.add(user)
+        post.reacted_user_rate.add(user)
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -288,8 +281,8 @@ def rate_user_view(request, pk, user_rate, amount_rate):
         user.profile.rating_sum += amount_rate
         user.profile.rating_count += 1
         user.profile.save()
-        if current_profile == post.user:
-            post.users_to_rate.remove(current_profile)
+        if current_profile.pk == post.user.pk:
+            post.users_to_rate.remove(user)
         else:
             post.reacted_user_rate.remove(current_profile)
     return redirect(f'/posts/post?id={pk}')
@@ -358,4 +351,87 @@ def Messages(request):
     user.profile.unread_notifications = 0
     user.profile.save()
     return render(request, 'messages/messages.html', context)
+
+
+
+def certificate(request):
+    user_id = request.GET['id']
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        raise Http404(f"Invalid user id: {user_id}")
+    if user.profile.certificate:
+        context = {
+            'current_profile': request.user,
+            'user': user,
+        }
+        return render(request, 'certificate/certificate.html', context)
+    return redirect('/')
+
+
+def get_category_assist_count(request):
+    # assist_count = {f'{k}': 0 if k else f'{k}': 0 for k in Category.objects.all()}
+    assist_count = {k.name: 0 for k in Category.objects.all()}
+    assist_count['No Category'] = 0
+    user = request.user
+
+    for post in filter(lambda some_post: user in some_post.users_assist.all(), Post.objects.all()):
+        if not post.category:
+            assist_count['No Category'] += 1
+        else:
+            assist_count[post.category.name] += 1
+
+    return render(request, 'assist_count/assist_count.html', {'assist_count': assist_count, 'user': user})
+
+
+def contact_admin(request):
+    user = request.user
+    if request.method == 'GET':
+        form = ContactAdminForm()
+    else:
+        form = ContactAdminForm(request.POST)
+        if form.is_valid():
+            subject = "Ten Yad Contact Admin: "
+            subject = subject + form.cleaned_data['subject']
+            message = f"A message was sent from Ten Yad - user (ID {user.pk}): {user.profile} ({user.email})\n"
+            message = message + form.cleaned_data['message']
+            try:
+                send_mail(subject, message, request.user.email, [settings.EMAIL_HOST_USER])
+            except BadHeaderError:
+                raise Http404("Invalid header")
+            send_alert(
+                user=user,
+                message=f"you're email '{subject}' was sent to admin")
+            return redirect('/')
+    context = {
+        'form': form,
+        'current_profile': user,
+    }
+    return render(request, "contact_admin/contact_admin.html", context)
+
+
+def send_alert(user, message, link=None):
+    msg = Message(user=user)
+    msg.link = link
+    msg.notification = message
+    msg.save()
+    user.profile.unread_notifications += 1
+    user.profile.save()
+
+
+def check_send_certificate(user):
+    if not user.profile.certificate:
+        if user.profile.points > 200:
+            user.profile.certificate = True
+            send_alert(user, f"Congratulations you have won a certificate of appreciation, "
+                             f"please check your email !", link=f"/certificate?id={user.pk}")
+            res = send_mail('Congratulations you have won a certificate of appreciation from "Ten-Yad"',
+                            f'http://127.0.0.1:8000/certificate?id={user.pk}',
+                            settings.EMAIL_HOST_USER, [user.email])
+
+
+def add_points(user, amount):
+    user.profile.points += amount
+    user.profile.save()
+    check_send_certificate(user)
 

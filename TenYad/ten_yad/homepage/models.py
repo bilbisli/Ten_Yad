@@ -4,6 +4,7 @@ from django.db import models
 # import django.contrib.auth
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
@@ -27,7 +28,7 @@ MAX_STRING = 1023
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', null=True)
     notification = models.CharField('notification', max_length=LARGE_STRING, blank=True, default='')
-    link = models.URLField("link", max_length=LARGE_STRING, blank=True, default='')
+    link = models.URLField("link", max_length=LARGE_STRING, blank=True, null=True)
     time = models.DateTimeField('alert_time', default=now)
 
     def __str__(self):
@@ -54,6 +55,8 @@ class Profile(models.Model):
     rating_sum = models.IntegerField(default=0)
     rating_count = models.IntegerField(default=0)
     unread_notifications = models.IntegerField(default=0)
+    is_representative = models.BooleanField(default=False)
+    certificate = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.get_username()}'
@@ -82,10 +85,11 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Category(models.Model):
-    def __str__(self):
-        return f'{self.name}'
     name = models.CharField(max_length=MEDIUM_STRING)
     time_signed = models.DateTimeField('time updated', default=now)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 # class PostType(models.Model):
@@ -143,3 +147,4 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', args=(str(self.id)))
+

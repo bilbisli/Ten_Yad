@@ -14,7 +14,7 @@
   <body>
     <div>
         {% if user.is_authenticated %}
-            <nav class="navbar navbar-expand-lg navbar navbar-light" style="background-color: #66b2ff;">
+            <nav class="navbar navbar-expand-lg navbar navbar-light" style="background-color: #b1b1b1;">
               <div class="container-fluid gap-3">
                 <a class="navbar-brand" href="/">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,10 +26,10 @@
     <!--                  <a class="nav-link active" aria-current="page" href="/">Home</a>-->
     <!--                </li>-->
                         <li class="nav-item">
-                          <a class="nav-link" href="/user/profile?id={{current_profile.pk}}">Profile</a>
+                          <a class="nav-link" style="color:black;" href="/user/profile?id={{current_profile.pk}}">Profile</a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link " href="{% url 'scoreboard' %}">Score Board</a>
+                          <a class="nav-link " style="color:black;" href="{% url 'scoreboard' %}">Score Board</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-4">
@@ -43,7 +43,7 @@
                         </li>
                     </ul>
                     <div class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link dropdown-toggle" style="color:black;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://img.icons8.com/fluent/30/000000/settings.png"/>
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -55,11 +55,11 @@
                       </ul>
                     </div>
                     {% if user.profile.unread_notifications %}
-                        <a class="nav-link" href="/Messages">Messages <txt style="font-size:14px; color:#FF0000; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                        <a class="nav-link" style="color:black;" href="/Messages">Messages <txt style="font-size:14px; color:#ff0000; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
                     {% else %}
-                        <a class="nav-link" href="/Messages">Messages <txt style="font-size:14px; color:#808080; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                        <a class="nav-link" style="color:black;" href="/Messages">Messages <txt style="font-size:14px; color:##463b3b; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
                     {% endif %}
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link" style="color:black;" href="/logout">Logout</a>
                 </div>
               </div>
             </nav>

@@ -1,4 +1,14 @@
 {% extends 'base/base.html' %}
+<<<<<<< HEAD
+=======
+{% block js %}
+    <script type="javascript">
+        $(window).on('load', function(e) {
+            ('#approveRepliers').modal('show');
+        });
+    </script>
+{% endblock %}
+>>>>>>> e9f013ea5376125e43c7d254ae22dcedcf28c7e0
 {% block title %}
     Ten Yad - post id: {{post.id}}
 {% endblock %}

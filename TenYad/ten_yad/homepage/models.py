@@ -140,4 +140,5 @@ class Post(models.Model):
         return f'title: {self.title}, author: {self.user.profile}, category: {category_print}'
 
     def get_absolute_url(self):
-        return reverse('post', args=(str(self.pk)))
+        return reverse('post', args=(str(self.id)))
+

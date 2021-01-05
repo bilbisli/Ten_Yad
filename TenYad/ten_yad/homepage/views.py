@@ -230,13 +230,6 @@ def AcceptReactView(request, pk, approved_reaction):
             post.approved_reactions.add(user)
             post.post_status = Post.PostStatus.TRANSACTION
 
-            msg = Message(user=user)
-            msg.link = f"/posts/post?id={pk}"
-            msg.notification = f"Your assist in: '{post.title}' was accept by {post.user.profile} - " \
-                               f"contact details now appear on the post -click to view-"
-            msg.save()
-            user.profile.unread_notifications += 1
-            user.profile.save()
         else:
             return redirect(f'/posts/post?id={pk}')
         post.approved_reactions.add(user)
@@ -337,6 +330,10 @@ def post_history(request):
 
 @login_required(login_url='/login/')
 def Messages(request):
+    """
+    :param reuqest: the session request
+    :type request: any
+    """
     user = request.user
     read_notifications = list(reversed(user.notifications.all()))
     unread_notifications = []

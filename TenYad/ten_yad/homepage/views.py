@@ -1,15 +1,37 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from .models import Message, Category
 from django.utils.timezone import datetime, now
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
+<<<<<<< Updated upstream
 from .forms import *
 from .forms import AssistOfferForm, EditProfile
 from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail, BadHeaderError
+=======
+from .forms import AssistOfferForm, EditProfile, SubscribeForm
+from django.urls import reverse
+
+
+from django.contrib import messages
+from django.conf import settings
+from django.conf import global_settings
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+
+from django.template import loader
+
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.forms import UserChangeForm
+
+>>>>>>> Stashed changes
 
 POINT_FOR_ASSIST = 10
 
@@ -470,12 +492,4 @@ def get_icon(user, category):
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
         if user.profile.points >= 200 and assist_count[category] == 7:
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
-
-
-
-
-
-
-
-
 

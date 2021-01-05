@@ -44,6 +44,7 @@ def post_page(request):
     }
     return render(request, 'post/post.html', context)
 
+
 @login_required(login_url='/login/')
 def edit_post(request):
     post_id = request.GET['id']
@@ -81,7 +82,7 @@ def user_profile(request):
         raise Http404(f"Invalid user id: {user_id}")
 
     rating = calculate_rating(user)
-
+    assist_count = calculate_assists_categories(user)
     if user.profile.birth_date and user.profile.birth_date.year:
         age = datetime.today().year - user.profile.birth_date.year
     else:
@@ -94,6 +95,7 @@ def user_profile(request):
         'rating': rating,
         'current_profile': request.user,
         'MAX_POINT': MAX_POINT,
+        'Max_Assist': max(assist_count.values()),
 
     }
     return render(request, 'profile/profile.html', context)
@@ -111,10 +113,10 @@ def profile_edit(request):
             return redirect(f"/user/profile?id={user.pk}")
     else:
         form = EditProfile(instance=request.user.profile)
-        formUser = EditUser(instance=request.user)
+        form_user = EditUser(instance=request.user)
     context = {
         'form': form,
-        'formUser': formUser,
+        'formUser': form_user,
         'current_profile': request.user,
     }
     return render(request, 'profile/editProfile.html', context)
@@ -154,22 +156,17 @@ def score_board(request):
     return render(request, 'scoreboard/scoreboard.html', context)
 
 
-def calculate_rating(user):
-    try:
-        return round(user.profile.rating_sum / user.profile.rating_count, 1)
-    except ZeroDivisionError:
-        return 0
-
-
 @login_required(login_url='/login/')
 def new_assist_post(request):
     if request.method == 'POST':
         assistance_form = AssistOfferForm(request.POST or None)
         if assistance_form.is_valid():
-            assistance_form.instance.user = request.user
+            user = request.user
+            post = assistance_form.instance
+            post.user = user
             form = assistance_form.save()
-            # messages.success(request, f'New Post created!')
-            return redirect('/')
+            send_alert(user, f"You created a post: '{post.title}'", f"/posts/post?id={post.pk}", False)
+            return redirect(f"/posts/post?id={post.pk}")
 
         # assistance_form = AssistOfferForm(request.POST or None, instance=request.user)
         # if assistance_form.is_valid():
@@ -194,9 +191,11 @@ def ReactView(request, pk):
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
     # post = Post.objects.get(id=post_id)
-    post.reactions.add(request.user)
+    user = request.user
+    post.reactions.add(user)
     user_post = post.user
-    send_alert(user_post, f"New reaction to your post: '{post.title}' from {request.user}", link=f"/posts/post?id={pk}")
+    send_alert(user_post, f"New reaction to your post: '{post.title}' from {request.user}", f"/posts/post?id={pk}")
+    send_alert(user, f"You reacted to post: '{post.title}'", f"/posts/post?id={pk}", False)
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -215,6 +214,7 @@ def CancelReactView(request, pk, user_reaction_remove):
             post.approved_reactions.remove(user)
             if not post.approved_reactions.all():
                 post.post_status = Post.PostStatus.ACTIVE
+
     return redirect(f'/posts/post?id={pk}')
 
 
@@ -226,6 +226,12 @@ def AcceptReactView(request, pk, approved_reaction):
         raise Http404(f"Invalid post id: {pk}")
     user = User.objects.get(id=approved_reaction)
     if request.user.pk == post.user.pk:
+        if not post.approved_reactions.all() or post.post_type == post.PostType.GROUP_ASSIST_OFFER or post.post_type == post.PostType.GROUP_ASSIST_REQUEST:
+            post.approved_reactions.add(user)
+            post.post_status = Post.PostStatus.TRANSACTION
+
+        else:
+            return redirect(f'/posts/post?id={pk}')
         post.approved_reactions.add(user)
         post.post_status = Post.PostStatus.TRANSACTION
         send_alert(user, f"Your assist in: '{post.title}' was accept by {post.user.profile} - "
@@ -246,7 +252,8 @@ def CompleteAssistView(request, pk, user_assist):
         msg = f"Your assist in: '{post.title}' was approved {POINT_FOR_ASSIST}" \
               f" points added to your score congratulations!!"
         send_alert(user=user, message=msg, link=f"/posts/post?id={pk}")
-
+        if post.category:
+            get_icon(user, post.category.name)
         if user in post.reactions.all():
             post.reactions.remove(user)
         if user in post.approved_reactions.all():
@@ -323,6 +330,10 @@ def post_history(request):
 
 @login_required(login_url='/login/')
 def Messages(request):
+    """
+    :param reuqest: the session request
+    :type request: any
+    """
     user = request.user
     read_notifications = list(reversed(user.notifications.all()))
     unread_notifications = []
@@ -340,7 +351,6 @@ def Messages(request):
     return render(request, 'messages/messages.html', context)
 
 
-
 def certificate(request):
     user_id = request.GET['id']
     try:
@@ -356,19 +366,20 @@ def certificate(request):
     return redirect('/')
 
 
-def get_category_assist_count(request):
-    # assist_count = {f'{k}': 0 if k else f'{k}': 0 for k in Category.objects.all()}
-    assist_count = {k.name: 0 for k in Category.objects.all()}
-    assist_count['No Category'] = 0
+def SearchVolunteersView(request, category=None, count=None):
     user = request.user
-
-    for post in filter(lambda some_post: user in some_post.users_assist.all(), Post.objects.all()):
-        if not post.category:
-            assist_count['No Category'] += 1
-        else:
-            assist_count[post.category.name] += 1
-
-    return render(request, 'assist_count/assist_count.html', {'assist_count': assist_count, 'user': user})
+    users = []
+    for user_check in User.objects.all():
+        calculate_assists_categories(user)
+        users = [user for user in User.objects.all()
+                 if filter(lambda category_assist: category_assist[category] >= count,
+                                                           calculate_assists_categories(user_check))]
+    context = {
+        'searchVolunteers': users,
+        'user': user,
+        'categories': Category.objects.all(),
+    }
+    return render(request, 'searchVolunteers/searchVolunteers.html', context)
 
 
 def contact_admin(request):
@@ -397,12 +408,20 @@ def contact_admin(request):
     return render(request, "contact_admin/contact_admin.html", context)
 
 
-def send_alert(user, message, link=None):
+def calculate_rating(user):
+    try:
+        return round(user.profile.rating_sum / user.profile.rating_count, 1)
+    except ZeroDivisionError:
+        return 0
+
+
+def send_alert(user, message, link=None, alert=True):
     msg = Message(user=user)
     msg.link = link
     msg.notification = message
     msg.save()
-    user.profile.unread_notifications += 1
+    if alert:
+        user.profile.unread_notifications += 1
     user.profile.save()
 
 
@@ -421,4 +440,39 @@ def add_points(user, amount):
     user.profile.points += amount
     user.profile.save()
     check_send_certificate(user)
+
+
+def calculate_assists_categories(user):
+    assist_count = {k.name: 0 for k in Category.objects.all()}
+    assist_count['No Category'] = 0
+
+    for post in filter(lambda some_post: user in some_post.users_assist.all(), Post.objects.all()):
+        if not post.category:
+            assist_count['No Category'] += 1
+        else:
+            assist_count[post.category.name] += 1
+    return assist_count
+
+
+def get_icon(user, category):
+    assist_count = calculate_assists_categories(user)
+    max_category = 0
+    for k, v in assist_count.items():
+        if max_category < v and k != category:
+            max_category = v
+    if assist_count[category] > max_category:
+        if user.profile.points >= 50 and assist_count[category] == 3:
+            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+        if user.profile.points >= 100 and assist_count[category] == 5:
+            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+        if user.profile.points >= 200 and assist_count[category] == 7:
+            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+
+
+
+
+
+
+
+
 

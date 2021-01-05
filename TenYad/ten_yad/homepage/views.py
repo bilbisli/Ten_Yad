@@ -5,14 +5,12 @@ from .models import Message, Category
 from django.utils.timezone import datetime, now
 from django.contrib.auth.decorators import login_required
 from .filters import PostSearch
-<<<<<<< Updated upstream
 from .forms import *
 from .forms import AssistOfferForm, EditProfile
 from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail, BadHeaderError
-=======
 from .forms import AssistOfferForm, EditProfile, SubscribeForm
 from django.urls import reverse
 
@@ -31,7 +29,6 @@ from django.template import loader
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.forms import UserChangeForm
 
->>>>>>> Stashed changes
 
 POINT_FOR_ASSIST = 10
 
@@ -492,4 +489,12 @@ def get_icon(user, category):
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
         if user.profile.points >= 200 and assist_count[category] == 7:
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+
+
+# def get_Volunteers(user, category):
+#     assist_count = calculate_assists_categories(user)
+#     max_category = 0
+#     element for element if assist_count[category] >= 3, assist_count:
+#     if assist_count[category] > max_category:
+#         if assist_count[category] >= 3:
 

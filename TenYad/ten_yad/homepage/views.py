@@ -248,14 +248,6 @@ def AcceptReactView(request, pk, approved_reaction):
         if not post.approved_reactions.all() or post.post_type == post.PostType.GROUP_ASSIST_OFFER or post.post_type == post.PostType.GROUP_ASSIST_REQUEST:
             post.approved_reactions.add(user)
             post.post_status = Post.PostStatus.TRANSACTION
-
-            msg = Message(user=user)
-            msg.link = f"/posts/post?id={pk}"
-            msg.notification = f"Your assist in: '{post.title}' was accept by {post.user.profile} - " \
-                               f"contact details now appear on the post -click to view-"
-            msg.save()
-            user.profile.unread_notifications += 1
-            user.profile.save()
         else:
             return redirect(f'/posts/post?id={pk}')
         post.approved_reactions.add(user)

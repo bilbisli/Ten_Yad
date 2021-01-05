@@ -1,11 +1,4 @@
 {% extends 'base/base.html' %}
-{% block js %}
-    <script type="text/javascript">
-        $(window).on('load', function(e) {
-            $('#approveRepliers').modal('show');
-        });
-    </script>
-{% endblock %}
 {% block title %}
     Ten Yad - post id: {{post.id}}
 {% endblock %}
@@ -30,6 +23,12 @@
     {% endif %}
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
+
+    <script type="text/javascript">
+        $(window).on('load', function(e) {
+            $('#approveRepliers').modal('show');
+        });
+    </script>
     {% if user == post.user %}
         {% if not post.reactions.all and not post.approved_reactions.all and not post.users_to_rate.all %}
             <button type="button" class="btn btn-primary btn-sm" disabled data-bs-toggle="modal" data-bs-target="#approveRepliers">

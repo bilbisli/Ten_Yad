@@ -24,9 +24,9 @@
     </div>
     <div class="recent_posts">
         <h3>recent posts</h3>
-        <ul class="list-group">
+        <ul>
             {% for post in show_posts %}
-                <li class="list-group-item"><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:
+                <li><a href="/posts/post?id={{post.id}}" >{{post.title}}</a> last updated:
                     {{post.time_updated_last}} by <a href="/user/profile?id={{post.user.id}}" >{{post.user.profile}}</a> </li>
             {% endfor %}
         </ul>

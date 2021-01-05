@@ -472,6 +472,19 @@ def get_icon(user, category):
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
 
 
+# def get_Volunteers(user, category):
+#     assist_count = calculate_assists_categories(user)
+#     max_category = 0
+#     element for element if assist_count[category] >= 3, assist_count:
+#     if assist_count[category] > max_category:
+#         if assist_count[category] >= 3:
+
+
+
+
+
+
+
 
 
 

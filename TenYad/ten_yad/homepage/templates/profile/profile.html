@@ -47,10 +47,10 @@
         </h1>
             {% if user == current_profile %}
         <div>
-            <a href="{% url 'profile_edit' %}" class="btn btn-success btn-sm">
+            <a href="{% url 'profile_edit' %}" class="btn btn-outline-dark btn-sm">
                 Edit Profile
             </a>
-            <a href="{% url 'change_password' %}" class="btn btn-success btn-sm">
+            <a href="{% url 'change_password' %}" class="btn btn-outline-dark btn-sm">
                Change Password
             </a>
         </div>
@@ -105,9 +105,10 @@
             {% endif %}
             {% if user.profile.points >= 200 and Max_Assist >= 7 %}
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-            width="50" height="50"
-            viewBox="0 0 172 172"
-            style=" fill:#000000;"><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="" fill="none"></path><path d="" fill="none"></path><g><path d="M129,129h-86l-17.91667,-71.66667l35.83333,28.66667l25.08333,-46.58333l25.08333,46.58333l35.83333,-28.66667z" fill="#ffc107"></path><path d="M43,129h86v17.91667h-86zM86,25.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM150.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM21.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z" fill="#ff9800"></path></g></g></g></svg>
+                width="50" height="50"
+                viewBox="0 0 172 172"
+                style=" fill:#000000;"><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="" fill="none"></path><path d="" fill="none"></path><g><path d="M129,129h-86l-17.91667,-71.66667l35.83333,28.66667l25.08333,-46.58333l25.08333,46.58333l35.83333,-28.66667z" fill="#ffc107"></path><path d="M43,129h86v17.91667h-86zM86,25.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM150.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667zM21.5,43c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z" fill="#ff9800"></path></g></g></g></svg>
+
             {% endif %}
-        </div>
+    </div>
 {% endblock %}

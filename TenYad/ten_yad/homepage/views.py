@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from .models import Message, Category
@@ -10,6 +11,24 @@ from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail, BadHeaderError
+from .forms import AssistOfferForm, EditProfile, SubscribeForm
+from django.urls import reverse
+
+
+from django.contrib import messages
+from django.conf import settings
+from django.conf import global_settings
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+
+from django.template import loader
+
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.forms import UserChangeForm
+
 
 POINT_FOR_ASSIST = 10
 
@@ -229,7 +248,6 @@ def AcceptReactView(request, pk, approved_reaction):
         if not post.approved_reactions.all() or post.post_type == post.PostType.GROUP_ASSIST_OFFER or post.post_type == post.PostType.GROUP_ASSIST_REQUEST:
             post.approved_reactions.add(user)
             post.post_status = Post.PostStatus.TRANSACTION
-
         else:
             return redirect(f'/posts/post?id={pk}')
         post.approved_reactions.add(user)
@@ -330,10 +348,6 @@ def post_history(request):
 
 @login_required(login_url='/login/')
 def Messages(request):
-    """
-    :param reuqest: the session request
-    :type request: any
-    """
     user = request.user
     read_notifications = list(reversed(user.notifications.all()))
     unread_notifications = []
@@ -469,10 +483,10 @@ def get_icon(user, category):
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
 
 
-
-
-
-
-
-
+# def get_Volunteers(user, category):
+#     assist_count = calculate_assists_categories(user)
+#     max_category = 0
+#     element for element if assist_count[category] >= 3, assist_count:
+#     if assist_count[category] > max_category:
+#         if assist_count[category] >= 3:
 

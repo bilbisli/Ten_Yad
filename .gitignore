@@ -53,9 +53,9 @@ htmlcov/
 nosetests.xml
 coverage.xml
 .pytest_cache/
-TenYad/ten_yad/homepage/tests/coverage_html/
-TenYad/ten_yad/homepage/tests/.coverage
-TenYad/ten_yad/homepage/tests/report/
+tests/coverage_html/
+tests/.coverage
+tests/report/
 
 # Translations
 *.mo

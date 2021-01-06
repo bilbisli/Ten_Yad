@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,7 +44,6 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'register.apps.RegisterConfig',
     'crispy_forms',
-    'homepage.tests',
 ]
 
 MIDDLEWARE = [
@@ -130,7 +127,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'homepage/templates/assets')
+    os.path.join(BASE_DIR, 'homepage/templates/assets'),
+    os.path.join(BASE_DIR, 'register/templates/static'),
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -140,11 +138,12 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-
 EMAIL_HOST_USER = "tenyad12@gmail.com"
 EMAIL_HOST_PASSWORD = "tenyad123456"
+
 

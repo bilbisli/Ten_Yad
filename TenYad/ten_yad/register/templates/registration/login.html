@@ -7,17 +7,29 @@ Login Here
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="position-absolute top-50 start-50 translate-middle">
-    {%if not user.is_authenticated %}
+<html>
+    <head>
+        <title>
 
-        <form method="post" class="form-group">
-            {% csrf_token %}
-            {{form|crispy}}
-            <button type="submit" class="btn btn-success">Login</button>
-            <p>Don't have an account? Create a new account <a href="/register">Here</a></p>
-        </form>
-    {% else %}
-        <a href="/logout" class="btn btn-primary">Logout</a>
-    {% endif %}
-    </div>
+        </title>
+        <link rel="stylesheet" type="text/css" href="/static/style_login.css">
+    </head>
+
+    <body>
+             <a id="name">Give a Hand</a>
+            <div class="position-absolute top-50 start-50 translate-middle">
+                {%if not user.is_authenticated %}
+                    <form method="post" class="form-group">
+                        <h1 id="login">Login</h1>
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        <button type="submit" class="btn btn-outline-dark btn-sm">Sing In</button>
+                        <a href="/register"><button type="button" class="btn btn-outline-dark btn-sm">Sing Up</button></a>
+                    </form>
+                {% else %}
+                    <a href="/logout" class="btn btn-outline-dark">Logout</a>
+                {% endif %}
+            </div>
+    </body>
+</html>
 {% endblock%}

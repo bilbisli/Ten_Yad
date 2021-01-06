@@ -19,3 +19,9 @@
     top: -55%;
     left: 20%;
 }
+body{
+  background-image: url(/static/background.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}

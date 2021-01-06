@@ -23,4 +23,5 @@ urlpatterns = [
     path('certificate', certificate, name='certificate'),
     url(f'contact_admin', contact_admin, name='contact_admin'),
     url(f'volunteers', SearchVolunteersView, name='volunteers'),
+    path('certificate', certificate, name='certificate'),
     ]

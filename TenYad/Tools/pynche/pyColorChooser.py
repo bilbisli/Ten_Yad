@@ -90,7 +90,7 @@ def save():
         _chooser.save()
 
 
-# test stuff
+# tests stuff
 if __name__ == '__main__':
     from tkinter import *
 

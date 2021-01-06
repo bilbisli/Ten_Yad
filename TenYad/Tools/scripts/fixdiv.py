@@ -16,7 +16,7 @@ kind of log file if you want to do this on Windows.
 
 The warnings are not limited to the script; modules imported by the
 script may also trigger warnings.  In fact a useful technique is to
-write a test script specifically intended to exercise all code in a
+write a tests script specifically intended to exercise all code in a
 particular module or set of modules.
 
 Then run `python fixdiv.py warnings'.  This first reads the warnings,
@@ -71,7 +71,7 @@ Here are the possible messages on stdout (N stands for a line number):
   likely cause is a warning about code executed by 'exec' or eval()
   (see note below), or an indirect invocation of the / operator, for
   example via the div() function in the operator module.  It could
-  also be caused by a change to the file between the time the test
+  also be caused by a change to the file between the time the tests
   script was run to collect warnings and the time fixdiv was run.
 
 - 'More than one / operator in line N'; or
@@ -119,7 +119,7 @@ Notes:
   warning about this failure; or these may be reported as 'Phantom'
   warnings (see above).  You're on your own to deal with these.  You
   could make all recommended changes and add a future division
-  statement to all affected files, and then re-run the test script; it
+  statement to all affected files, and then re-run the tests script; it
   should not issue any warnings.  If there are any, and you have a
   hard time tracking down where they are generated, you can use the
   -Werror option to force an error instead of a first warning,

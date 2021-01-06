@@ -17,8 +17,8 @@ After each round of tests, it prints a message:
 The highest printed value of "NNNN" is therefore the highest potentially
 safe limit for your system (which depends on the OS, architecture, but also
 the compilation flags). Please note that it is practically impossible to
-test all possible recursion paths in the interpreter, so the results of
-this test should not be trusted blindly -- although they give a good hint
+tests all possible recursion paths in the interpreter, so the results of
+this tests should not be trusted blindly -- although they give a good hint
 of which values are reasonable.
 
 NOTE: When the C stack space allocated by your system is exceeded due

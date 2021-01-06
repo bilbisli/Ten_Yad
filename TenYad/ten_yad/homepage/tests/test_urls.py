@@ -1,6 +1,6 @@
 import unittest
 from django.urls import reverse, resolve
-from .views import post_page
+from homepage.views import post_page
 
 
 class TestUrls(unittest.TestCase):

@@ -23,8 +23,8 @@ Login Here
                         <h1 id="login">Login</h1>
                         {% csrf_token %}
                         {{form|crispy}}
-                        <button type="submit" class="btn btn-outline-dark">Sing In</button>
-                        <a href="/register"><button type="button" class="btn btn-outline-dark">Sing Up</button></a>
+                        <button type="submit" class="btn btn-outline-dark btn-sm">Sing In</button>
+                        <a href="/register"><button type="button" class="btn btn-outline-dark btn-sm">Sing Up</button></a>
                     </form>
                 {% else %}
                     <a href="/logout" class="btn btn-outline-dark">Logout</a>

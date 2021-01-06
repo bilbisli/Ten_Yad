@@ -1,0 +1,18 @@
+{% extends "base/base.html" %}
+
+{% block title %}Create an Account{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="position-absolute top-50 start-50 translate-middle">
+        {%if not user.is_authenticated %}
+            <form method="POST" class ="form-group">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <p><strong>* If you are a non-profit organization representative - please use "Contact Admin" in the settings section after login to notify us.</strong></p>
+                <button type="submit" class="btn btn-dark btn-sm">register</button>
+            </form>
+        {% else %}
+            <a href="/logout" class="btn btn-primary" >Logout</a>
+        {% endif %}
+    </div>
+{% endblock %}

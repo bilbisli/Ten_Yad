@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% block title %}
+    Ten Yad - Edit Profile
+{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="col-md-6">
+            {{ formUser|crispy }}
+            {{ form|crispy }}
+        </div>
+
+<!--            <label for="inputEmail4" class="form-label">certificate</label>-->
+<!--            <input type="user" class="form-control" id="{{ user }}">-->
+
+        <button type="submit" class="btn btn-dark btn-sm" name="save">save edit</button>
+        <a href="{% url 'change_password' %}">
+            <button type="button" class="btn btn-dark btn-sm">Change Password</button>
+        </a>
+        <br>
+        <br>
+
+    </form>
+
+{% endblock %}
+
+{% if user.profile.show_phone != False %}
+    <p><span><input type="checkbox" class="largerCheckbox" name="checkBox1" checked></span> <font size="-1">show my phone.</font></p>
+{% endif %}

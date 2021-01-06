@@ -5,7 +5,7 @@
 # ifdef [-Dname] ... [-Uname] ... [file] ...
 #
 # This scans the file(s), looking for #ifdef and #ifndef preprocessor
-# commands that test for one of the names mentioned in the -D and -U
+# commands that tests for one of the names mentioned in the -D and -U
 # options.  On standard output it writes a copy of the input file(s)
 # minus those code sections that are suppressed by the selected
 # combination of defined/undefined symbols.  The #if(n)def/#else/#else

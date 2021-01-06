@@ -1,4 +1,4 @@
-"""Run Python's test suite in a fast, rigorous way.
+"""Run Python's tests suite in a fast, rigorous way.
 
 The defaults are meant to be reasonably thorough, while skipping certain
 tests that can be time-consuming or resource-intensive (e.g. largefile),
@@ -30,8 +30,8 @@ def main(regrtest_args):
     # Allow user-specified interpreter options to override our defaults.
     args.extend(test.support.args_from_interpreter_flags())
 
-    args.extend(['-m', 'test',    # Run the test suite
-                 '-r',            # Randomize test order
+    args.extend(['-m', 'tests',    # Run the tests suite
+                 '-r',            # Randomize tests order
                  '-w',            # Re-run failed tests in verbose mode
                  ])
     if sys.platform == 'win32':

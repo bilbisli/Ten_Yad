@@ -795,7 +795,7 @@ class SheetGUI:
 
 
 def test_basic():
-    "Basic non-gui self-test."
+    "Basic non-gui self-tests."
     a = Sheet()
     for x in range(1, 11):
         for y in range(1, 11):
@@ -816,7 +816,7 @@ def test_basic():
     a.save("sheet1.xml")
 
 def test_gui():
-    "GUI test."
+    "GUI tests."
     if sys.argv[1:]:
         filename = sys.argv[1]
     else:

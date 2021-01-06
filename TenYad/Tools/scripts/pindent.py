@@ -499,7 +499,7 @@ def test():
             action(filename, stepsize, tabsize, expandtabs)
         # end for
     # end if
-# end def test
+# end def tests
 
 if __name__ == '__main__':
     test()

@@ -7,9 +7,9 @@
         <h1>Post History</h1>
     </div>
     <div class="post_history_list: ">
-        <ol>
+        <ol class="list-group">
         {% for post in user_posts %}
-            <li>
+            <li class="list-group-item">
                 {% if post.post_status == post.PostStatus.ARCHIVE %}
                 <a href="/posts/post?id={{post.id}}" >{{post.title}}</a> <txt style="font-size:14px; color:#538b01; font-weight:bold; font-style:italic;">(archived)</txt> updated last: {{post.time_updated_last}}
                 {% else %}

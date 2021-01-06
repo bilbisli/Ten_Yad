@@ -9,7 +9,7 @@
                 {% csrf_token %}
                 {{ form|crispy }}
                 <p><strong>* If you are a non-profit organization representative - please use "Contact Admin" in the settings section after login to notify us.</strong></p>
-                <button type="submit" class="btn btn-success">register</button>
+                <button type="submit" class="btn btn-dark btn-sm">register</button>
             </form>
         {% else %}
             <a href="/logout" class="btn btn-primary" >Logout</a>

@@ -624,7 +624,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # some more test strings
+    # some more tests strings
     # this one creates a warning
-    _('*** Seen unexpected token "%(token)s"') % {'token': 'test'}
+    _('*** Seen unexpected token "%(token)s"') % {'token': 'tests'}
     _('more' 'than' 'one' 'string')

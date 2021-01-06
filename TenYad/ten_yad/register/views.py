@@ -3,9 +3,8 @@ from django.contrib.auth import login, authenticate
 from .forms import RegisterForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.messages import constants as messages
-from .decorators import unathenticated_user
+from .decorators import unauthenticated_user
 
-@unathenticated_user
 @user_passes_test(lambda user: not user.is_authenticated)
 def register(response):
     if response.method == "POST":

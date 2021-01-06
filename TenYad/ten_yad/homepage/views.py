@@ -380,18 +380,18 @@ def certificate(request):
     return redirect('/')
 
 
-def SearchVolunteersView(request, category=None, count=None):
+def SearchVolunteersView(request, category=None, temp_num=None):
     user = request.user
     users = []
-    for user_check in User.objects.all():
-        calculate_assists_categories(user)
-        users = [user for user in User.objects.all()
-                 if filter(lambda category_assist: category_assist[category] >= count,
-                                                           calculate_assists_categories(user_check))]
+    for user in User.objects.all():
+        assist_category = calculate_assists_categories(user)
+        if category in assist_category and assist_category[category] >= temp_num:
+            users.append(user)
     context = {
         'searchVolunteers': users,
         'user': user,
         'categories': Category.objects.all(),
+        'current_profile': request.user,
     }
     return render(request, 'searchVolunteers/searchVolunteers.html', context)
 

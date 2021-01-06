@@ -21,11 +21,12 @@
       <option value="3">Three</option>
     </select>
     <ul>
-        {{post.time_updated_last}}<a href="/user/profile?id={{user.id}}" >{{user.profile}}'s</a> Assist count:
-        {% for k, v in assist_count.items %}
-            <li>
-                Category '{{ k }}': {{ v }}
-            </li>
+
+        <h3> The volunteers who helped at the category :<option value="{{ category }}">{{ category }}</option> </h3>
+        {% for user_check in searchVolunteers %}
+            <p>
+                <a href="/user/profile?id={{user_check.id}}" >{{user_check.profile}}'s</a>
+            </p>
         {% endfor %}
     </ul>
 {% endblock %}

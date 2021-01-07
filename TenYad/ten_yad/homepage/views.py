@@ -11,7 +11,7 @@ from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.mail import send_mail, BadHeaderError
-from .forms import AssistOfferForm, EditProfile, SubscribeForm
+from .forms import AssistOfferForm, EditProfile
 from django.urls import reverse
 
 

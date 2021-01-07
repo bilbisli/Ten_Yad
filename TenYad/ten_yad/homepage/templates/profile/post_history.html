@@ -3,11 +3,12 @@
     Ten Yad - Post History
 {% endblock %}
 {% block content %}
+<link rel="stylesheet" href="/static/style_back_all.css">
     <div class="post_history_titel">
         <h1>Post History</h1>
     </div>
     <div class="post_history_list: ">
-        <ol class="list-group">
+        <ol class="list-group" style="opacity:0.85;">
         {% for post in user_posts %}
             <li class="list-group-item">
                 {% if post.post_status == post.PostStatus.ARCHIVE %}
@@ -24,14 +25,16 @@
                         <ul style="list-style-type: square ; padding-bottom: 0;">
                                 <li style="margin-left:2em"> <a href="/user/profile?id={{approved_reaction.id}}" >
                                     {{approved_reaction.profile}}</a></li>
-                            <form action="{% url 'cancel_react_to_post' post.id approved_reaction.pk %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
-                            </form>
-                            <form action="{% url 'complete_assist' post.id approved_reaction.pk %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Complete assist</button>
-                            </form>
+                            <div>
+                                    {% csrf_token %}
+                                    <a href="{% url 'cancel_react_to_post' post.id approved_reaction.pk %}" class="btn btn-danger btn-sm">
+                                        Cancel
+                                    </a>
+                                    {% csrf_token %}
+                                    <a href="{% url 'complete_assist' post.id approved_reaction.pk %}" class="btn btn-success btn-sm">
+                                        Complete assist
+                                    </a>
+                            </div>
                         </ul>
                     {% endfor %}
                 {% endif %}

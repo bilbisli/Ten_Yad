@@ -354,6 +354,8 @@ def Messages(request):
     if user.profile.unread_notifications:
         unread_notifications = read_notifications[:user.profile.unread_notifications]
         read_notifications = read_notifications[user.profile.unread_notifications:]
+    unread_notifications = [(number + 1, notification) for number, notification in enumerate(unread_notifications)]
+    read_notifications = [(number + 1, notification) for number, notification in enumerate(read_notifications)]
     context = {
         'user': user,
         'unread_notifications': unread_notifications,

@@ -3,28 +3,29 @@
     Ten Yad - Notifications
 {% endblock %}
 {% block content %}
+<link rel="stylesheet" href="/static/style_back_all.css">
     <div class="Notifications_titel">
         <h1>Notifications:</h1>
     </div>
     <div class="Notifications_list: ">
-         <ul style="list-style-type: decimal ; padding-bottom: 0;">
+         <ul class="list-group" style="opacity:0.85;">
              <h3>Unread Notifications</h3>
-            {% for notification in unread_notifications %}
+            {% for number, notification in unread_notifications %}
                 {% if notification.link %}
-                    <p><li style="margin-left:2em"><a href="{{notification.link}}" style="text-decoration: none"> {{notification.notification}}</a>    {{notification.time}}</li></p>
+                    <li class="list-group-item" style="margin-left:2em">{{ number }}. <a href="{{notification.link}}" style="text-decoration: none"> {{notification.notification}}</a>    {{notification.time}}</li>
                 {% else %}
-                    <p><li style="margin-left:2em">{{notification.notification}}    {{notification.time}}</li></p>
+                    <li class="list-group-item" style="margin-left:2em">{{ number }}. {{notification.notification}}    {{notification.time}}</li>
                 {% endif %}
             {% endfor %}
         </ul>
         <hr>
-        <ul style="list-style-type: decimal ; padding-bottom: 0;">
+        <ul class="list-group" style="opacity:0.85;">
             <h3>Read Notifications</h3>
-            {% for notification in read_notifications %}
+            {% for number, notification in read_notifications %}
                 {% if notification.link %}
-                    <p><li style="margin-left:2em"><a href="{{notification.link}}"  style="text-decoration: none"> {{notification.notification}}</a>    {{notification.time}}</li></p>
+                    <li class="list-group-item" style="margin-left:2em">{{ number }}.<a href="{{notification.link}}"  style="text-decoration: none"> {{notification.notification}}</a>    {{notification.time}}</li>
                 {% else %}
-                    <p><li style="margin-left:2em">{{notification.notification}}    {{notification.time}}</li></p>
+                    <li class="list-group-item" style="margin-left:2em">{{ number }}. {{notification.notification}}    {{notification.time}}</li>
                 {% endif %}
             {% endfor %}
         </ul>

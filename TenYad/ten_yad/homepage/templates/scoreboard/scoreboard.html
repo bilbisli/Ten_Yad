@@ -15,9 +15,9 @@
       </thead>
       <tbody>
         {% for number, user, score in top_scores %}
-            <tr>
-              <td>{{ number }}</td>
-              <td><a href="/user/profile?id={{user.id}}" >{{user.profile}}</a></td>
+            <tr class="bg-light" style="opacity:0.7">
+              <th scope="row">{{ number }}</th>
+                <td><a href="/user/profile?id={{user.id}}" style="color:#0A0000; text-decoration: none"><strong><em>{{user.profile}}</em><strong></a></td>
               <td>{{ user.profile.points }}</td>
               <td>{{ score }}</td>
             </tr>

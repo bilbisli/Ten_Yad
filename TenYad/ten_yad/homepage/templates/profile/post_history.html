@@ -26,14 +26,14 @@
                                 <li style="margin-left:2em"> <a href="/user/profile?id={{approved_reaction.id}}" >
                                     {{approved_reaction.profile}}</a></li>
                             <div>
-                                    {% csrf_token %}
-                                    <a href="{% url 'cancel_react_to_post' post.id approved_reaction.pk %}" class="btn btn-danger btn-sm">
-                                        Cancel
-                                    </a>
-                                    {% csrf_token %}
-                                    <a href="{% url 'complete_assist' post.id approved_reaction.pk %}" class="btn btn-success btn-sm">
-                                        Complete assist
-                                    </a>
+                                {% csrf_token %}
+                                <a href="{% url 'cancel_react_to_post' post.id approved_reaction.pk request.get_full_path %}" class="btn btn-danger btn-sm">
+                                    Cancel
+                                </a>
+                                {% csrf_token %}
+                                <a href="{% url 'complete_assist' post.id approved_reaction.pk request.get_full_path %}" class="btn btn-success btn-sm">
+                                    Complete assist
+                                </a>
                             </div>
                         </ul>
                     {% endfor %}
@@ -43,8 +43,8 @@
                 {% endif %}
                 {% for user_assisted in post.users_assist.all %}
                     <ul style="list-style-type: square ; padding-bottom: 0;">
-                            <li style="margin-left:2em"> <a href="/user/profile?id={{user_assisted.id}}" >
-                                {{user_assisted.profile}}</a></li>
+                        <li style="margin-left:2em"> <a href="/user/profile?id={{user_assisted.id}}" >
+                            {{user_assisted.profile}}</a></li>
                     </ul>
                 {% endfor %}
             </li>

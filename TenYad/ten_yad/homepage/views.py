@@ -201,7 +201,10 @@ def ReactView(request, pk):
 
 
 @login_required(login_url='/login/')
-def CancelReactView(request, pk, user_reaction_remove):
+def CancelReactView(request, pk, user_reaction_remove, redirection=None):
+    print("lets see")
+    if not redirection:
+        redirection = f'/posts/post?id={pk}'
     try:
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
@@ -216,7 +219,7 @@ def CancelReactView(request, pk, user_reaction_remove):
             if not post.approved_reactions.all():
                 post.post_status = Post.PostStatus.ACTIVE
 
-    return redirect(f'/posts/post?id={pk}')
+    return redirect(redirection)
 
 
 @login_required(login_url='/login/')
@@ -240,7 +243,9 @@ def AcceptReactView(request, pk, approved_reaction):
 
 
 @login_required(login_url='/login/')
-def CompleteAssistView(request, pk, user_assist):
+def CompleteAssistView(request, pk, user_assist, redirection=None):
+    if not redirection:
+        redirection = f'/posts/post?id={pk}'
     try:
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
@@ -260,7 +265,7 @@ def CompleteAssistView(request, pk, user_assist):
             post.approved_reactions.remove(user)
         post.users_to_rate.add(user)
         post.reacted_user_rate.add(user)
-    return redirect(f'/posts/post?id={pk}')
+    return redirect(redirection)
 
 
 @login_required(login_url='/login/')

@@ -11,7 +11,7 @@
              <h3>Unread Notifications</h3>
             {% for notification in unread_notifications %}
                 {% if notification.link %}
-                    <p><li style="margin-left:2em"><a href="{{notification.link}}"> {{notification.notification}}</a>    {{notification.time}}</li></p>
+                    <p><li style="margin-left:2em"><a href="{{notification.link}}" style="text-decoration: none"> {{notification.notification}}</a>    {{notification.time}}</li></p>
                 {% else %}
                     <p><li style="margin-left:2em">{{notification.notification}}    {{notification.time}}</li></p>
                 {% endif %}
@@ -22,7 +22,7 @@
             <h3>Read Notifications</h3>
             {% for notification in read_notifications %}
                 {% if notification.link %}
-                    <p><li style="margin-left:2em"><a href="{{notification.link}}"> {{notification.notification}}</a>    {{notification.time}}</li></p>
+                    <p><li style="margin-left:2em"><a href="{{notification.link}}"  style="text-decoration: none"> {{notification.notification}}</a>    {{notification.time}}</li></p>
                 {% else %}
                     <p><li style="margin-left:2em">{{notification.notification}}    {{notification.time}}</li></p>
                 {% endif %}

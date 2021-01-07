@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import six
 
+
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
 
@@ -30,7 +31,6 @@ def allowed_users(allowed_roles=[]):
         return wrapper_func
 
     return decorator
-
 
 def admin_only(view_func):
     def wrapper_function(request, *args, **kwargs):

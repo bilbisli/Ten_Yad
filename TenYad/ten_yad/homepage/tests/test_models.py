@@ -44,7 +44,7 @@ class ModelsTestCase(TestCase):
         login = self.client.login(username='testerFinal', password='testpassword')
         response = c.post('/login/', {'username': 'testerFinal', 'password': 'testpassword'})
 
-        # Check our user is logged in
+        # Check our user is saved correctly logged in
         self.assertEqual(str(self.user.profile), 'testerFinal')
         # Check that we got a response "success"
         self.assertEqual(response.status_code, 302)

@@ -1,4 +1,6 @@
 import django_filters
+from django import forms
+
 from .models import Post, Category
 from django_filters import CharFilter
 
@@ -10,6 +12,9 @@ class PostSearch(django_filters.FilterSet):
     class Meta:
         model = Post
         fields = ('post_type', 'category', 'title', 'content', 'location')
+        widgets = {
+            'search': forms.TextInput(attrs={'class': 'search_posts'}),
+        }
 
 
 class VolunteerSearch(django_filters.FilterSet):

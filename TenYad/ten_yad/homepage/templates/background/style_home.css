@@ -4,3 +4,16 @@ body{
   background-attachment: fixed;
   background-size: 100% 110%;
 }
+
+.list-group-item{
+    width: 800px;
+}
+
+input[type=text], select{
+    width: 10%;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+

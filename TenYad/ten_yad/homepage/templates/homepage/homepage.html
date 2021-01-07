@@ -15,12 +15,15 @@
 <!--    </div>-->
 
     <link rel="stylesheet" href="/static/style_home.css">
-    <div class="search_posts">
-        <form method="get">
-<!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-            {{ post_filter.form|crispy }}
-            <button class="btn btn-outline-dark btn-sm" type="submit">Search</button>
-        </form>
+    <div class="flex-container">
+        <div class="search_posts">
+            <form method="get">
+    <!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+                {{ post_filter.form }}
+
+                    <button class="btn btn-outline-dark btn-sm align-top" type="submit">Search</button>
+            </form>
+        </div>
     </div>
     <div class="recent_posts">
         <h3>recent posts</h3>

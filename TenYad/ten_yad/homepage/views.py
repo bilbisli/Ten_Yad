@@ -453,12 +453,13 @@ def calculate_assists_categories(user):
 
 
 def get_icon(user, category):
+    category = str(category)
     assist_count = calculate_assists_categories(user)
     max_category = 0
     for k, v in assist_count.items():
         if max_category < v and k != category:
             max_category = v
-    if assist_count[category] > max_category:
+    if category in assist_count.keys() and assist_count[category] > max_category:
         if user.profile.points >= 50 and assist_count[category] == 3:
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
         if user.profile.points >= 100 and assist_count[category] == 5:

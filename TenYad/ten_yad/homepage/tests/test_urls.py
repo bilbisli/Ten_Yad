@@ -6,7 +6,8 @@ from homepage.views import post_page
 class TestUrls(unittest.TestCase):
     def test_something(self):
         url = reverse('post_page')
-        print(resolve(url))
+        # print(resolve(url))
+        self.assertEqual(resolve(url).func, post_page)
         assert 2 == 2
 
 

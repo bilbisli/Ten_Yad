@@ -62,7 +62,7 @@ class Profile(models.Model):
         return f'{self.user.get_username()}'
 
     def get_email(self):
-        return f'{User.email}'
+        return f'{self.user.email}'
 
     def set_email(self, email):
         self.user.email = email
@@ -142,7 +142,9 @@ class Post(models.Model):
     def __str__(self):
         category_print = ''
         if self.category:
-            category_print += f', {self.category}'
+            category_print += f'{self.category}'
+        else:
+            category_print += 'None'
         return f'title: {self.title}, author: {self.user.profile}, category: {category_print}'
 
     def get_absolute_url(self):

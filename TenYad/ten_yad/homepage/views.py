@@ -362,6 +362,7 @@ def certificate(request):
     return redirect('/')
 
 
+@login_required(login_url='/login/')
 def SearchVolunteersView(request, category=None, temp_num=None):
     user = request.user
     users = []
@@ -378,6 +379,7 @@ def SearchVolunteersView(request, category=None, temp_num=None):
     return render(request, 'searchVolunteers/searchVolunteers.html', context)
 
 
+@login_required(login_url='/login/')
 def contact_admin(request):
     user = request.user
     if request.method == 'GET':

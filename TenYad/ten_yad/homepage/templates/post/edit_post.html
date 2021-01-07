@@ -4,7 +4,7 @@
 {% endblock %}
 {% load crispy_forms_tags %}
 {% block content %}
-
+<link rel="stylesheet" href="/static/style_back_all.css">
     <form method="POST">
         {% csrf_token %}
         <div class="col-md-6">
@@ -14,7 +14,7 @@
 <!--            <label for="inputEmail4" class="form-label">Email</label>-->
 <!--            <input type="user" class="form-control" id="{{ user }}">-->
 
-        <button type="submit" class="btn btn-success" name="save">save edit</button>
+        <button type="submit" class="btn btn-dark btn-sm" name="save">save edit</button>
 
     </form>
 

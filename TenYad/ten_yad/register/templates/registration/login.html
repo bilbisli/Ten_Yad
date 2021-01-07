@@ -17,19 +17,22 @@ Login Here
 
     <body>
              <a id="name">Give a Hand</a>
-            <div class="position-absolute top-50 start-50 translate-middle">
+             <h1 id="login">Login</h1>
+
                 {%if not user.is_authenticated %}
-                    <form method="post" class="form-group">
-                        <h1 id="login">Login</h1>
-                        {% csrf_token %}
-                        {{form|crispy}}
-                        <button type="submit" class="btn btn-outline-dark btn-sm">Sing In</button>
-                        <a href="/register"><button type="button" class="btn btn-outline-dark btn-sm">Sing Up</button></a>
-                    </form>
+
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                        <form method="post" class="form-group">
+                            {% csrf_token %}
+                            {{form|crispy}}
+                            <button type="submit" class="btn btn-dark btn-sm align-bottom" style="margin-top: 4px">login</button>
+                            <a href="/register"><button type="button" class="btn btn-outline-dark btn-sm align-bottom" style="margin-top: 4px">sign up</button></a>
+                        </form>
+                    </div>
                 {% else %}
                     <a href="/logout" class="btn btn-outline-dark">Logout</a>
                 {% endif %}
-            </div>
+
     </body>
 </html>
 {% endblock%}

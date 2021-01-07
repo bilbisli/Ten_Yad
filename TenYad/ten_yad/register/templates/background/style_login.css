@@ -7,7 +7,7 @@
     transform: translate(-50%, -50%);
 }
 #login{
-	float: left;
+    position: absolute;
 	font-size: 50px;
 	border-bottom: 6px solid #56565a;
 	margin-bottom: 5px;
@@ -15,9 +15,9 @@
 	margin: 0;
     padding:0;
     font-family: sans-serif;
-    position: absolute;
-    top: -55%;
-    left: 20%;
+    top: 28%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 body{
   background-image: url(/static/background.png);

@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block js %}
+<link rel="stylesheet" href="/static/style_back_all.css">
     <script type="text/javascript">
         $(window).on('load', function(e) {
             $('#approveRepliers').modal('show');
@@ -101,14 +102,14 @@
                                     <h4 id = "{{ reacted_user }}"><a href="/user/profile?id={{reacted_user.id}}" style="text-decoration: none">{{reacted_user.profile}}</a></h4>
                                         <ul style="list-style-type: square ; padding-bottom: 0;">
                                             {% if reacted_user in post.approved_reactions.all %}
-                                                <form action="{% url 'cancel_react_to_post' post.id reacted_user.pk %}" method="POST">
                                                 {% csrf_token %}
-                                                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-danger btn-sm">Cancel</button>
-                                                </form>
-                                                <form action="{% url 'complete_assist' post.id reacted_user.pk %}" method="POST">
+                                                <a href="{% url 'cancel_react_to_post' post.id reacted_user.pk %}" class="btn btn-danger btn-sm">
+                                                    Cancel
+                                                </a>
                                                 {% csrf_token %}
-                                                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Complete assist</button>
-                                                </form>
+                                                <a href="{% url 'complete_assist' post.id reacted_user.pk %}" class="btn btn-success btn-sm">
+                                                    Complete assist
+                                                </a>
                                             {% else %}
                                                 <form action="{% url 'accept_react_to_post' post.id reacted_user.pk %}" method="POST">
                                                 {% csrf_token %}

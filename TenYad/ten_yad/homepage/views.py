@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.http import Http404
 from .models import Message, Category
 from django.utils.timezone import datetime, now
@@ -60,7 +60,6 @@ def edit_post(request):
         if assistance_form.is_valid():
             assistance_form.instance.time_updated_last = now()
             form = assistance_form.save()
-            # messages.success(request, f'New Post created!')
             return redirect(f'/posts/post?id={post_id}')
         else:
             return redirect(f'/')
@@ -106,11 +105,11 @@ def user_profile(request):
 def profile_edit(request):
     if request.method == 'POST':
         form = EditProfile(request.POST, instance=request.user)
-        formUser = EditUser(request.POST, instance=request.user)
+        form_user = EditUser(request.POST, instance=request.user)
         user = request.user
-        if form.is_valid():
+        if form.is_valid() and form_user.is_valid():
             form.save()
-            formUser.save()
+            form_user.save()
             return redirect(f"/user/profile?id={user.pk}")
     else:
         form = EditProfile(instance=request.user.profile)
@@ -148,12 +147,6 @@ def score_board(request):
         'score_board_link': score_board_link,
         'current_profile': request.user,
     }
-    # return render(request, 'scoreboard.html')
-    # posts = Post.objects.all()
-    # # show_posts = posts.order_by('-id')[:100]
-    # post_filter = PostSearch(request.GET, queryset=posts)
-    # show_posts = post_filter.qs
-    # context = {'page_title': 'homepage', 'show_posts': show_posts, 'post_filter': post_filter}
     return render(request, 'scoreboard/scoreboard.html', context)
 
 
@@ -168,14 +161,6 @@ def new_assist_post(request):
             form = assistance_form.save()
             send_alert(user, f"You created a post: '{post.title}'", f"/posts/post?id={post.pk}", False)
             return redirect(f"/posts/post?id={post.pk}")
-
-        # assistance_form = AssistOfferForm(request.POST or None, instance=request.user)
-        # if assistance_form.is_valid():
-        #     saving = assistance_form.save(commit=False)
-        #     saving.post.user = post.user
-        #     saving.save()
-        #     # messages.success(request, f'New Post created!')
-        #     return redirect(f'/post?id={saving.post.id}')
     else:
         assistance_form = AssistOfferForm()
     context = {
@@ -191,7 +176,6 @@ def ReactView(request, pk):
         post = Post.objects.get(id=pk)
     except Post.DoesNotExist:
         raise Http404(f"Invalid post id: {pk}")
-    # post = Post.objects.get(id=post_id)
     user = request.user
     post.reactions.add(user)
     user_post = post.user
@@ -432,7 +416,7 @@ def send_alert(user, message, link=None, alert=True):
 
 def check_send_certificate(user):
     if not user.profile.certificate:
-        if user.profile.points > 200:
+        if user.profile.points > 250:
             user.profile.certificate = True
             send_alert(user, f"Congratulations you have won a certificate of appreciation, "
                              f"please check your email !", link=f"/certificate?id={user.pk}")
@@ -466,6 +450,7 @@ def get_icon(user, category):
     for k, v in assist_count.items():
         if max_category < v and k != category:
             max_category = v
+
     if category in assist_count.keys() and assist_count[category] > max_category:
         if user.profile.points >= 50 and assist_count[category] == 3:
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
@@ -473,12 +458,3 @@ def get_icon(user, category):
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
         if user.profile.points >= 200 and assist_count[category] == 7:
             send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
-
-
-# def get_Volunteers(user, category):
-#     assist_count = calculate_assists_categories(user)
-#     max_category = 0
-#     element for element if assist_count[category] >= 3, assist_count:
-#     if assist_count[category] > max_category:
-#         if assist_count[category] >= 3:
-

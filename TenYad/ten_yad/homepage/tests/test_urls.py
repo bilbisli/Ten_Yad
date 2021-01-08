@@ -8,7 +8,6 @@ class TestUrls(unittest.TestCase):
         url = reverse('post_page')
         # print(resolve(url))
         self.assertEqual(resolve(url).func, post_page)
-        assert 2 == 2
 
 
 if __name__ == '__main__':

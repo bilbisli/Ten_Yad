@@ -13,7 +13,7 @@ from django.conf import settings
 
 
 POINT_FOR_ASSIST = 10
-
+SITE_ADRESS = 'http://127.0.0.1:8000'
 
 @login_required(login_url='/login/')
 def homepage(request):
@@ -421,7 +421,7 @@ def check_send_certificate(user):
             send_alert(user, f"Congratulations you have won a certificate of appreciation, "
                              f"please check your email !", link=f"/certificate?id={user.pk}")
             res = send_mail('Congratulations you have won a certificate of appreciation from "Ten-Yad"',
-                            f'http://127.0.0.1:8000/certificate?id={user.pk}',
+                            f'{SITE_ADRESS}/certificate?id={user.pk}',
                             settings.EMAIL_HOST_USER, [user.email])
 
 

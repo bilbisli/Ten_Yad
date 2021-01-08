@@ -68,6 +68,7 @@ class EditUser(forms.ModelForm):
         return user
 
 
-class ContactAdminForm(forms.Form):
+class ContactEmailForm(forms.Form):
     subject = forms.CharField(required=True)
     message = forms.CharField(widget=forms.Textarea)
+

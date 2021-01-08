@@ -28,7 +28,7 @@
     {% endif %}
     <p>content: {{post.content}}</p>
     {% if post.equipment %}
-        <p>equipment needed: {{post.equipment}}</p>
+        <p>equipment details: {{post.equipment}}</p>
     {% endif %}
     <p>updated last: {{post.time_updated_last}}</p>
     <p>post status: {{post.post_status}}</p>
@@ -295,10 +295,12 @@
         {% elif current_profile != post.user %}
             <form action="{% url 'react_to_post' post.id %}" method="POST">
                 {% csrf_token %}
-                <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
+                {% if current_profile.profile.gender == 'Female' %}
+                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Tni Yad</button>
+                {% else %}
+                    <button type="submit", name="post_id", value = "{{ post.pk }}" , class="btn btn-success btn-sm">Ten Yad</button>
+                {% endif %}
             </form>
-
-
         {% endif %}
     {% endif %}
 

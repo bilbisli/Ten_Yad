@@ -355,34 +355,67 @@ def certificate(request):
 
 @login_required(login_url='/login/')
 def SearchVolunteersView(request):
-    category = request.POST.get('category', None)
-    number = int(request.POST.get('number', 0))
-    # category = request.GET['category']
-    # number = int(request.GET['number'])
-    print(number)
-    print(category)
     user = request.user
-    users = []
-    for user in User.objects.all():
-        assist_category = calculate_assists_categories(user)
-        if category in assist_category and assist_category[category] >= number:
-            users.append(user)
-    context = {
-        'searchVolunteers': users,
-        'user': user,
-        'categories': Category.objects.all(),
-        'current_profile': request.user,
-    }
-    return render(request, 'searchVolunteers/searchVolunteers.html', context)
+    if user.profile.is_representative:
+        category = request.POST.get('category')
+        print(category)
+        number = request.POST.get('number')
+        if number:
+            number = int(number)
+
+        # category = request.GET['category']
+        # number = int(request.GET['number'])
+
+        users = []
+        if number and category != 'None':
+            for user in User.objects.all():
+                assist_category = calculate_assists_categories(user)
+                if category in assist_category and assist_category[category] >= number:
+                    users.append(user)
+        potential_v = request.GET.getlist('pot_vol')
+        if request.method == 'POST':
+            form = ContactEmailForm()
+        else:
+            form = ContactEmailForm(request.GET)
+            if form.is_valid():
+                subject = "Volunteering opportunity from TenYad: "
+                subject = subject + form.cleaned_data['subject']
+                message = f"A message was sent from Ten Yad - user (ID {user.pk}): {user.profile} ({user.email})\n"
+                message = message + form.cleaned_data['message']
+                for potential_volunteer in potential_v:
+                    potential_volunteer = User.objects.get(id=potential_volunteer)
+                    try:
+                        send_mail(subject, message, user.email, [potential_volunteer.email])
+                    except BadHeaderError:
+                        raise Http404("Invalid header")
+                    send_alert(
+                        user=potential_volunteer,
+                        message=f'New volunteering opportunity from {user.profile} - check your email for further details',
+                        link=f'/user/profile?id={user.pk}'
+                    )
+                send_alert(
+                    user=user,
+                    message=f"you're email '{subject}' was sent to all potential volunteers")
+                return redirect('/volunteers')
+        context = {
+            'searchVolunteers': users,
+            'user': user,
+            'categories': Category.objects.all(),
+            'current_profile': request.user,
+            'form': form,
+            'category': category,
+        }
+        return render(request, 'searchVolunteers/searchVolunteers.html', context)
+    return redirect('/')
 
 
 @login_required(login_url='/login/')
 def contact_admin(request):
     user = request.user
     if request.method == 'GET':
-        form = ContactAdminForm()
+        form = ContactEmailForm()
     else:
-        form = ContactAdminForm(request.POST)
+        form = ContactEmailForm(request.POST)
         if form.is_valid():
             subject = "Ten Yad Contact Admin: "
             subject = subject + form.cleaned_data['subject']
@@ -459,8 +492,8 @@ def get_icon(user, category):
 
     if category in assist_count.keys() and assist_count[category] > max_category:
         if user.profile.points >= 50 and assist_count[category] == 3:
-            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+            send_alert(user, "Congratulations you have won a new trophy", f"/user/profile?id={user.pk}")
         if user.profile.points >= 100 and assist_count[category] == 5:
-            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+            send_alert(user, "Congratulations you have won a new trophy", f"/user/profile?id={user.pk}")
         if user.profile.points >= 200 and assist_count[category] == 7:
-            send_alert(user, "Congratulations you have won a new icon", f"/user/profile?id={user.pk}")
+            send_alert(user, "Congratulations you have won a new trophy", f"/user/profile?id={user.pk}")

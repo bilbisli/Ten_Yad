@@ -33,11 +33,17 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-4">
                         <li class="nav-item d-flex justify-content-center">
                             <a href="{% url 'TenYad' %}" style="margin-left: 8em; margin-right: 0.5em">
-                                <button type="button" class="btn btn-warning">Ten Yad</button>
+                                {% if current_profile.profile.gender == 'Female' %}
+                                    <button type="button" class="btn btn-warning">Tni Yad</button>
+                                {% else %}
+                                    <button type="button" class="btn btn-warning">Ten Yad</button>
+                                {% endif %}
                             </a>
-                            <a href="{% url 'volunteers' %}">
-                                <button type="button" class="btn btn-outline-warning" style="background-color:#24697b; border-color:#24697b">Search Volunteers</button>
-                            </a>
+                            {% if current_profile.profile.is_representative %}
+                                <a href="{% url 'volunteers' %}">
+                                    <button type="button" class="btn btn-outline-warning" style="background-color:#24697b; border-color:#24697b">Search Volunteers</button>
+                                </a>
+                            {% endif %}
                         </li>
                     </ul>
                     <div class="nav-item dropdown">

@@ -8,47 +8,38 @@
 
     <form action="/volunteers" method="POST">
         <select id="category" name="category" class="form-select form-select-sm" aria-label=".form-select-sm example">
-          <option selected>Choose Category</option>
+          <option selected value="None">Choose Category</option>
             {% for category in categories %}
               <option value="{{ category }}">{{ category }}</option>
             {% endfor %}
         </select>
 
         <select id="number" name="number" class="form-select form-select-sm" aria-label=".form-select-sm example">
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option selected value="0">Minimum Assists in Category</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
         </select>
         {% csrf_token %}
         <input class="btn btn-outline-dark btn-sm" type="submit" value="Submit">
     </form>
 
-    <h3> The volunteers who helped at the category :<option value="{{ category }}">{{ category }}</option> </h3>
     {% if searchVolunteers %}
+        <h3> The volunteers who helped at the category : {{ category }} </h3>
         <ul>
             <form action="/volunteers">
                 {% for user_check in searchVolunteers %}
-                      <input type="checkbox" id="user" name="user" value="{{user_check.pk}}">
-                      <label for="user"> <a href="/user/profile?id={{user_check.id}}" >{{user_check.profile}}'s</a> </label><br>
+                      <input type="checkbox" id="potential_v" name="pot_vol" value="{{user_check.pk}}">
+                      <label for="potential_v"> <a href="/user/profile?id={{user_check.id}}" style="text-decoration: none">{{user_check.profile}}</a> </label><br>
                 {% endfor %}
+                <div class="col-md-6">
+                    {{ form|crispy }}
+                </div>
                 {% csrf_token %}
-                <input class="btn btn-outline-dark btn-sm" type="submit" value="Submit">
+                <input class="btn btn-dark btn-sm" type="submit" value="submit" name="submit">
             </form>
         </ul>
-    {% else %}
-        <p>No volunteers found</p>
     {% endif %}
-
-
-        <form action="/action_page.php">
-          <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-          <label for="vehicle1"> I have a bike</label><br>
-          <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-          <label for="vehicle2"> I have a car</label><br>
-          <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-          <label for="vehicle3"> I have a boat</label><br><br>
-          <input type="submit" value="Submit">
-        </form>
-
 {% endblock %}

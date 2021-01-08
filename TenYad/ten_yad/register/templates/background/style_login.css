@@ -6,6 +6,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 #login{
     position: absolute;
 	font-size: 50px;
@@ -19,6 +20,21 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+#logout-message{
+position: absolute;
+    top: 37%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#logout-if-logged-in{
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 body{
   background-image: url(/static/background.png);
   background-repeat: no-repeat;

@@ -130,7 +130,7 @@ class Post(models.Model):
     location = models.CharField(max_length=MEDIUM_STRING)
     start_time = models.DateTimeField('relevant from', default=now)
     end_time = models.DateTimeField('relevant until', default=now)
-    equipment = models.TextField('equipment needed', max_length=LARGE_STRING, blank=True)
+    equipment = models.TextField('equipment details', max_length=LARGE_STRING, blank=True)
     content = models.TextField(max_length=MAX_STRING)
     # reactions = models.ManyToManyField(User, null=True, related_name='reactions', blank=True)
     reactions = models.ManyToManyField(User, related_name='reactions', blank=True)

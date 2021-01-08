@@ -354,12 +354,18 @@ def certificate(request):
 
 
 @login_required(login_url='/login/')
-def SearchVolunteersView(request, category=None, temp_num=None):
+def SearchVolunteersView(request):
+    category = request.POST.get('category', None)
+    number = int(request.POST.get('number', 0))
+    # category = request.GET['category']
+    # number = int(request.GET['number'])
+    print(number)
+    print(category)
     user = request.user
     users = []
     for user in User.objects.all():
         assist_category = calculate_assists_categories(user)
-        if category in assist_category and assist_category[category] >= temp_num:
+        if category in assist_category and assist_category[category] >= number:
             users.append(user)
     context = {
         'searchVolunteers': users,

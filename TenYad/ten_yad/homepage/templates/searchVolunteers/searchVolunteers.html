@@ -6,27 +6,49 @@
 {% block content %}
 <link rel="stylesheet" href="/static/style_back_all.css">
 
+    <form action="/volunteers" method="POST">
+        <select id="category" name="category" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option selected>Choose Category</option>
+            {% for category in categories %}
+              <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
 
-    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-      <option selected>Choose Category</option>
-        {% for category in categories %}
-          <option value="{{ category }}">{{ category }}</option>
-        {% endfor %}
-    </select>
+        <select id="number" name="number" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+        {% csrf_token %}
+        <input class="btn btn-outline-dark btn-sm" type="submit" value="Submit">
+    </form>
 
-    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-      <option selected>Open this select menu</option>
-      <option value="1">One</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
-    </select>
-    <ul>
+    <h3> The volunteers who helped at the category :<option value="{{ category }}">{{ category }}</option> </h3>
+    {% if searchVolunteers %}
+        <ul>
+            <form action="/volunteers">
+                {% for user_check in searchVolunteers %}
+                      <input type="checkbox" id="user" name="user" value="{{user_check.pk}}">
+                      <label for="user"> <a href="/user/profile?id={{user_check.id}}" >{{user_check.profile}}'s</a> </label><br>
+                {% endfor %}
+                {% csrf_token %}
+                <input class="btn btn-outline-dark btn-sm" type="submit" value="Submit">
+            </form>
+        </ul>
+    {% else %}
+        <p>No volunteers found</p>
+    {% endif %}
 
-        <h3> The volunteers who helped at the category :<option value="{{ category }}">{{ category }}</option> </h3>
-        {% for user_check in searchVolunteers %}
-            <p>
-                <a href="/user/profile?id={{user_check.id}}" >{{user_check.profile}}'s</a>
-            </p>
-        {% endfor %}
-    </ul>
+
+        <form action="/action_page.php">
+          <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+          <label for="vehicle1"> I have a bike</label><br>
+          <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+          <label for="vehicle2"> I have a car</label><br>
+          <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+          <label for="vehicle3"> I have a boat</label><br><br>
+          <input type="submit" value="Submit">
+        </form>
+
 {% endblock %}

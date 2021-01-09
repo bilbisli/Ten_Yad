@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +28,8 @@ FIXTURE_DIRS = (
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'eym%8+!fnenx4x_kn6xr956zbo0zdasqx&zwi7uc4y-%!bt2e9'
+# SECRET_KEY = 'eym%8+!fnenx4x_kn6xr956zbo0zdasqx&zwi7uc4y-%!bt2e9'
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,6 +149,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "tenyad12@gmail.com"
-EMAIL_HOST_PASSWORD = "tenyad123456"
+# EMAIL_HOST_PASSWORD = "tenyad123456"
 
-
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))

@@ -29,7 +29,6 @@ wheels/
 *.egg-info/
 *.egg
 .installed.cfg
-*.spec
 
 
 # PyInstaller

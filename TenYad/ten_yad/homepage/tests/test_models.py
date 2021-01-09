@@ -51,7 +51,7 @@ class ModelsTestCase(TestCase):
         self.assertEqual(post.post_status, (Post.PostStatus.ACTIVE).lower())
         self.assertEqual(str(self.post), f'title: need help with homework, author: testerFinal, category: sport')
 
-    def test_logged_in_uses_correct_template(self):
+    def test_logged_in_user_model(self):
         c = Client()
         login = self.client.login(username='testerFinal', password='testpassword')
         response = c.post('/login/', {'username': 'testerFinal', 'password': 'testpassword'})

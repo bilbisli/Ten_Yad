@@ -46,63 +46,59 @@
                             {% endif %}
                         </li>
                     </ul>
-                    <div class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" style="color:black;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://img.icons8.com/fluent/30/000000/settings.png"/>
-                      </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'post_history' %}">Post History</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
-                        <li><a class="dropdown-item" href="{% url 'contact_admin' %}">Contact Admin</a></li>
-                      </ul>
-                    </div>
-                            <div>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" style=" border: none; background: none;">
-                                  <svg width="30" height="30" viewBox="0 0 24 24">
-                                      <path
-                                        d="M18,6 L6,12 L18,18"
-                                        stroke="#212b36"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        fill="none"
-                                      />
-                                      <circle cx="18" cy="6" r="3" fill="#212b36"/>
-                                      <circle cx="6" cy="12" r="3" fill="#212b36"/>
-                                      <circle cx="18" cy="18" r="3" fill="#212b36"/>
-                                    </svg>
-
-                                </button>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                  <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel"> URL sharing :</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
-                                      </div>
-                                      <div class="modal-body">
-                                            <p> {{ request.build_absolute_uri }} </p>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                    </div>
-                </div>
-
-
-
-                    {% if user.profile.unread_notifications %}
+                    <div class="gap-2 d-flex justify-content-center">
+                        <div class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" style="color:black;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://img.icons8.com/fluent/30/000000/settings.png"/>
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'post_history' %}">Post History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{% url 'contact_admin' %}">Contact Admin</a></li>
+                          </ul>
+                        </div>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#shareModal" style=" border: none; background: none;">
+                          <svg width="30" height="30" viewBox="0 0 24 24">
+                              <path
+                                d="M18,6 L6,12 L18,18"
+                                stroke="#212b36"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                fill="none"
+                              />
+                              <circle cx="18" cy="6" r="3" fill="#212b36"/>
+                              <circle cx="6" cy="12" r="3" fill="#212b36"/>
+                              <circle cx="18" cy="18" r="3" fill="#212b36"/>
+                            </svg>
+                        </button>
+                        <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel"> URL sharing :</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                              </div>
+                              <div class="modal-body">
+                                    <p> {{ request.build_absolute_uri }} </p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% if user.profile.unread_notifications %}
                         <a class="nav-link" style="color:black;" href="/Messages">Messages <txt style="font-size:14px; color:#ff0000; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
-                    {% else %}
-                        <a class="nav-link" style="color:black;" href="/Messages">Messages <txt style="font-size:14px; color:##463b3b; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
-                    {% endif %}
-                    <a class="nav-link" style="color:black;" href="/logout">Logout</a>
+                        {% else %}
+                            <a class="nav-link" style="color:black;" href="/Messages">Messages <txt style="font-size:14px; color:##463b3b; font-weight:bold; font-style:italic;">({{user.profile.unread_notifications}})</txt></a>
+                        {% endif %}
+                        <a class="nav-link" style="color:black;" href="/logout">Logout</a>
+                    </div>
                 </div>
+
               </div>
             </nav>
         {% endif %}

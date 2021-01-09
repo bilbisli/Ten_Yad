@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 """
 Utility for parsing HTML5 entity definitions available from:
 

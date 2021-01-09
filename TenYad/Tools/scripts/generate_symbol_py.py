@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/.env python3
 # This script generates the symbol.py source file.
 
 import sys

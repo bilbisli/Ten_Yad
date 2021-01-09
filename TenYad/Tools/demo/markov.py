@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 
 """
 Markov chain simulation of words or characters.

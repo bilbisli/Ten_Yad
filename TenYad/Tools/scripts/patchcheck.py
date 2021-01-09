@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 """Check proposed changes for common issues."""
 import re
 import sys

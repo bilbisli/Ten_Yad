@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 
 """
 SS1 -- a spreadsheet-like application.

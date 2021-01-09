@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 
 """
 A demonstration of classes and their special methods in Python.

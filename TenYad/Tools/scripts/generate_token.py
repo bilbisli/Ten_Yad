@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/.env python3
 # This script generates token related files from Grammar/Tokens:
 #
 #   Doc/library/token-list.inc

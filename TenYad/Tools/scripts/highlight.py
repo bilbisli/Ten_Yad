@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 '''Add syntax highlighting to Python source code'''
 
 __author__ = 'Raymond Hettinger'

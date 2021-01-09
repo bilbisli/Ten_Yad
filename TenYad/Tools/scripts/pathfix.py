@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 
 # Change the #! line (shebang) occurring in Python scripts.  The new interpreter
 # pathname must be given with a -i option.
@@ -11,7 +11,7 @@
 # The original file is kept as a back-up (with a "~" attached to its name),
 # -n flag can be used to disable this.
 
-# Sometimes you may find shebangs with flags such as `#! /usr/bin/env python -si`.
+# Sometimes you may find shebangs with flags such as `#! /usr/bin/.env python -si`.
 # Normally, pathfix overwrites the entire line, including the flags.
 # To change interpreter and keep flags from the original shebang line, use -k.
 # If you want to keep flags and add to them one single literal flag, use option -a.

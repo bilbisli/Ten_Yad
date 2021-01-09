@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 """Miscellaneous diagnostics for the import system"""
 
 import sys

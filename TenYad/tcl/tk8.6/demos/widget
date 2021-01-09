@@ -630,14 +630,14 @@ proc printCode {w file} {
     set code [$w get 1.0 end-1c]
 
     set dir "."
-    if {[info exists ::env(HOME)]} {
+    if {[info exists ::.env(HOME)]} {
 	set dir "$::env(HOME)"
     }
-    if {[info exists ::env(TMP)]} {
-	set dir $::env(TMP)
+    if {[info exists ::.env(TMP)]} {
+	set dir $::.env(TMP)
     }
-    if {[info exists ::env(TEMP)]} {
-	set dir $::env(TEMP)
+    if {[info exists ::.env(TEMP)]} {
+	set dir $::.env(TEMP)
     }
 
     set filename [file join $dir "tkdemo-$file"]

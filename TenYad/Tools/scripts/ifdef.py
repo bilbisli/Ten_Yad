@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/.env python3
 
 # Selectively preprocess #ifdef / #ifndef statements.
 # Usage:

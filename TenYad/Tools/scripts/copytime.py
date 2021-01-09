@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/.env python3
 
 # Copy one file's atime and mtime to another
 

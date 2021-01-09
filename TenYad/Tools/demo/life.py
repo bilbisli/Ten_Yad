@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/.env python3
 
 """
 A curses-based version of Conway's Game of Life.

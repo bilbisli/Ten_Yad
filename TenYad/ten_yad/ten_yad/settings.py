@@ -33,12 +33,15 @@ FIXTURE_DIRS = (
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '.herokuapp.com'
     'tenyadd.herokuapp.com'
-    '*'
+    '*',
+    '127.0.0.1',
+    '127.0.0.1:8000',
+    'localhost',
     ]
 #
 # CSRF_COOKIE_SECURE = True

@@ -15,6 +15,7 @@ from django.conf import settings
 POINT_FOR_ASSIST = 10
 SITE_ADRESS = 'http://127.0.0.1:8000'
 
+
 @login_required(login_url='/login/')
 def homepage(request):
     user = request.user

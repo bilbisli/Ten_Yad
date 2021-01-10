@@ -2,18 +2,16 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.shortcuts import render
+from django.contrib.auth import login
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .decorators import account_activation_token
-from django.core.mail import EmailMessage, send_mail, BadHeaderError
+from django.core.mail import send_mail, BadHeaderError
 from .forms import RegisterForm
 from django.contrib.auth.decorators import user_passes_test
-import time
-from django.contrib.messages import constants as messages
-from .decorators import unauthenticated_user
+
 
 @user_passes_test(lambda user: not user.is_authenticated)
 def register(request):

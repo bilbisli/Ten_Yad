@@ -37,6 +37,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     '.herokuapp.com'
+    'tenyadd.herokuapp.com'
+    '*'
     ]
 
 CSRF_COOKIE_SECURE = True

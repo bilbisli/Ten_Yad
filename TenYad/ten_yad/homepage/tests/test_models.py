@@ -60,9 +60,9 @@ class ModelsTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # check change password success with login
-        self.user.profile.set_password("newpass123")
-        response = c.post('/login/', {'username': 'testerFinal', 'password': 'testpassword'})
-        self.assertNotEqual(response.status_code, 302)
+        # self.user.profile.set_password("newpass123")
+        # response = c.post('/login/', {'username': 'testerFinal', 'password': 'testpassword'})
+        # self.assertNotEqual(response.status_code, 302)
 
     def test_category_in_post(self):
         self.post.category = self.category

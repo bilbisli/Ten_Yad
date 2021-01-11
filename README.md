@@ -1,5 +1,6 @@
 # Ten_Yad
 Project Ten Yad - by Israel Avihail, Ofir Golan, Daniel Dahan, Matan Fadida
+
 הנחיות להרצה:
 סביבת הרצה PyCharm.
 פתיחת פרוייקט עם סביבה וירטואלית Virtualenv.

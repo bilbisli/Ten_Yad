@@ -2,6 +2,7 @@
 Project Ten Yad - by Israel Avihail, Ofir Golan, Daniel Dahan, Matan Fadida
 Live Website Link:
 https://bilbisli.pythonanywhere.com/
+
 הנחיות להרצה:
 סביבת הרצה PyCharm.
 פתיחת פרוייקט עם סביבה וירטואלית Virtualenv.

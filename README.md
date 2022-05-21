@@ -1,5 +1,5 @@
 # Ten_Yad
-A gaimified social platform for volunteering and asking for help.
+A gaimified social platform for volunteering and asking for help. </br>
 Project Ten Yad - by Israel Avihail, Ofir Golan, Daniel Dahan, Matan Fadida
 
 Live Website Link:
